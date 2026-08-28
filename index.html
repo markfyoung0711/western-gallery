@@ -1123,7 +1123,7 @@ function openInquiry(kind,id){
   const compose=()=>({subj:i.h+(w?' — "'+w.t+'"':''),
     body:document.getElementById('msg').value+'\n\n— '+document.getElementById('nm').value+'\n'+document.getElementById('em').value});
   f.onsubmit=e=>{ e.preventDefault(); const m=compose();
-    location.href='mailto:'+C.meta.email+'?subject='+encodeURIComponent(m.subj)+'&body='+encodeURIComponent(m.body);
+    location.href='mailto:'+encodeURIComponent(C.meta.email)+'?subject='+encodeURIComponent(m.subj)+'&body='+encodeURIComponent(m.body);
     document.getElementById('inqNote').textContent='Handed off to your email app.'; };
   f.querySelector('[data-copy]').onclick=async()=>{
     const m=compose(), note=document.getElementById('inqNote');

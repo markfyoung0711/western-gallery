@@ -27,7 +27,7 @@ next show, or commission. Light and dark themes both ship.
 
 ## Setup
 
-Three steps, once.
+Four steps, once.
 
 **1. Create the Supabase project.** At supabase.com, new project, any region near you.
 
@@ -55,6 +55,12 @@ push; Pages redeploys.
 Then in Supabase, under Authentication → URL Configuration, set the site URL to
 `https://markfyoung0711.github.io/western-gallery/` and add it to the redirect
 allowlist, so sign-in links come back to the right place.
+
+**4. Close public signup.** Authentication → Providers → Email, turn off *Allow new
+users to sign up*. Then add each editor by hand under Authentication → Users → Add
+user, with auto-confirm on. After that a sign-in request for any address that is not
+already a user simply fails, so the magic-link endpoint cannot be used to mail links
+to strangers. `admin_emails` still governs who can write — two independent gates.
 
 Leave `config.js` empty and the site runs in local mode instead — a browser-only
 draft plus an export button, no accounts. That is the fallback if Supabase is
