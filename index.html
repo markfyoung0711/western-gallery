@@ -41,54 +41,42 @@ body{
   font-family:var(--f-body); font-size:16px; line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{font-family:var(--f-display); font-weight:500; text-wrap:balance; margin:0}
+h1,h2,h3,h4{font-family:var(--f-display); font-weight:500; text-wrap:balance; margin:0}
 a{color:var(--accent); text-decoration-thickness:1px; text-underline-offset:3px}
 :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
 button{font:inherit; color:inherit; cursor:pointer}
 .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
-.label{
-  font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
-  color:var(--faint);
-}
+.label{font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--faint)}
+.spacer{flex:1}
+[hidden]{display:none !important}
 
-/* ---------- masthead ---------- */
 header.mast{border-bottom:1px solid var(--line); background:var(--surface)}
 .mast-in{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:26px 0 20px; flex-wrap:wrap}
 .brand h1{font-size:clamp(28px,4.2vw,44px); line-height:1; letter-spacing:-.01em}
 .brand h1 em{font-style:italic}
 .brand p{margin:8px 0 0; color:var(--muted); font-size:14px; max-width:52ch}
 .mast-side{display:flex; align-items:center; gap:10px}
-.ghost{
-  background:transparent; border:1px solid var(--line); border-radius:var(--r);
-  padding:8px 14px; font-size:13px; font-weight:500;
-}
+.ghost{background:transparent; border:1px solid var(--line); border-radius:var(--r); padding:8px 14px; font-size:13px; font-weight:500}
 .ghost:hover{border-color:var(--accent); color:var(--accent)}
-.solid{
-  background:var(--accent); color:var(--on-accent); border:1px solid var(--accent);
-  border-radius:var(--r); padding:9px 16px; font-size:13px; font-weight:600;
-}
+.ghost.sm{padding:5px 10px; font-size:12px}
+.solid{background:var(--accent); color:var(--on-accent); border:1px solid var(--accent); border-radius:var(--r); padding:9px 16px; font-size:13px; font-weight:600}
 .solid:hover{filter:brightness(1.08)}
+.solid.sm{padding:6px 12px; font-size:12px}
+.danger{border-color:color-mix(in srgb,var(--warm) 45%,transparent); color:var(--warm)}
+.danger:hover{border-color:var(--warm); color:var(--warm)}
 
-.note{
-  background:var(--raised); border:1px solid var(--line-soft); border-left:2px solid var(--accent);
-  padding:12px 16px; font-size:13px; color:var(--muted); border-radius:0 var(--r) var(--r) 0;
-  margin:20px 0 0;
-}
+.note{background:var(--raised); border:1px solid var(--line-soft); border-left:2px solid var(--accent); padding:12px 16px; font-size:13px; color:var(--muted); border-radius:0 var(--r) var(--r) 0; margin:20px 0 0}
 .note strong{color:var(--ink); font-weight:600}
+.note.draft{border-left-color:var(--warm)}
+.note.draft b{color:var(--warm)}
 
-/* ---------- format chooser ---------- */
 .formats{padding:28px 0 4px}
-.formats-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap}
 .formats-head h2{font-size:20px}
 .formats-head p{margin:4px 0 0; color:var(--muted); font-size:14px}
 .fmt-row{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:16px}
 @media (max-width:900px){.fmt-row{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.fmt-row{grid-template-columns:1fr}}
-.fmt{
-  text-align:left; background:var(--surface); border:1px solid var(--line);
-  border-radius:var(--r); padding:12px 13px 13px; display:flex; flex-direction:column; gap:9px;
-  transition:border-color .16s, background .16s, transform .16s;
-}
+.fmt{text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:12px 13px 13px; display:flex; flex-direction:column; gap:9px; transition:border-color .16s, background .16s, transform .16s}
 .fmt:hover{border-color:var(--faint); transform:translateY(-1px)}
 .fmt[aria-pressed="true"]{border-color:var(--accent); background:var(--raised); box-shadow:inset 0 0 0 1px var(--accent)}
 .fmt .thumb{height:44px; border:1px solid var(--line-soft); background:var(--wall); border-radius:2px; overflow:hidden}
@@ -96,59 +84,38 @@ header.mast{border-bottom:1px solid var(--line); background:var(--surface)}
 .fmt .bf{font-size:12px; color:var(--muted); line-height:1.4}
 .fmt .bf b{color:var(--ink); font-weight:600}
 
-/* ---------- filter bar ---------- */
-.bar{
-  position:sticky; top:0; z-index:30; margin-top:26px;
-  background:color-mix(in srgb, var(--ground) 88%, transparent);
-  backdrop-filter:blur(8px); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-}
+.bar{position:sticky; top:0; z-index:30; margin-top:26px; background:color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter:blur(8px); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
 .bar-in{display:flex; align-items:center; gap:14px; padding:11px 0; flex-wrap:wrap}
 .chips{display:flex; gap:6px; flex-wrap:wrap}
-.chip{
-  border:1px solid var(--line); background:transparent; border-radius:100px;
-  padding:5px 13px; font-size:13px; color:var(--muted); transition:.15s;
-}
+.chip{border:1px solid var(--line); background:transparent; border-radius:100px; padding:5px 13px; font-size:13px; color:var(--muted); transition:.15s}
 .chip:hover{color:var(--ink); border-color:var(--faint)}
 .chip[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--ground); font-weight:500}
-.spacer{flex:1}
 .count{font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums}
-select.sel{
-  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
-  padding:6px 10px; font-size:13px; color:var(--ink);
-}
+select.sel, input.sel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:6px 10px; font-size:13px; color:var(--ink); font-family:inherit}
 
 main{padding:30px 0 90px; min-height:60vh}
 
-/* ---------- shared card bits ---------- */
 .piece-title{font-family:var(--f-display); font-size:17px; line-height:1.2}
 .piece-title i{font-style:italic}
 .meta{font-size:12.5px; color:var(--muted)}
 .price{font-size:13px; font-variant-numeric:tabular-nums; font-weight:500}
-.tag{
-  display:inline-block; font-size:10px; font-weight:600; letter-spacing:.1em;
-  text-transform:uppercase; padding:3px 7px; border-radius:2px; vertical-align:2px;
-}
+.tag{display:inline-block; font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 7px; border-radius:2px; vertical-align:2px}
 .tag.avail{color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 45%, transparent)}
 .tag.sold{color:var(--warm); border:1px solid color-mix(in srgb,var(--warm) 45%, transparent)}
 .tag.show{color:var(--muted); border:1px solid var(--line)}
 
-/* ---------- 1. salon hang ---------- */
 .salon{background:linear-gradient(180deg,var(--wall),var(--wall-2)); border:1px solid var(--line); padding:44px 34px 0; border-radius:var(--r)}
 .salon-wall{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:center; gap:34px 40px; padding-bottom:26px}
 .hung{background:none; border:0; padding:0; display:block; position:relative}
-.hung .fr{
-  border:9px solid var(--frame); background:var(--mat); padding:10px;
-  box-shadow:var(--shadow); transition:transform .2s, box-shadow .2s;
-}
+.hung .fr{border:9px solid var(--frame); background:var(--mat); padding:10px; box-shadow:var(--shadow); transition:transform .2s, box-shadow .2s}
 .hung:hover .fr{transform:translateY(-3px); box-shadow:var(--shadow-lift)}
 .hung img{display:block; width:100%; height:auto}
 .hung .cap{margin-top:9px; text-align:center; max-width:230px}
 .hung .cap .piece-title{font-size:14px}
 .hung .cap .meta{font-size:11px}
-.rail{height:1px; background:var(--line); margin:0 -34px; box-shadow:0 1px 0 color-mix(in srgb,var(--raised) 60%, transparent)}
+.rail{height:1px; background:var(--line); margin:0 -34px}
 .plinth{padding:14px 0 18px; text-align:center; font-size:12px; color:var(--faint)}
 
-/* ---------- 2. masonry ---------- */
 .masonry{columns:4 250px; column-gap:22px}
 .masonry .card{break-inside:avoid; margin:0 0 22px}
 .card{background:none; border:0; padding:0; display:block; width:100%; text-align:left}
@@ -156,17 +123,12 @@ main{padding:30px 0 90px; min-height:60vh}
 .card:hover img{transform:translateY(-2px); box-shadow:var(--shadow-lift)}
 .card .cap{padding:10px 2px 0; display:flex; flex-direction:column; gap:2px}
 
-/* ---------- 3. catalog grid ---------- */
 .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:26px 22px}
-.grid .card .sq{
-  aspect-ratio:1/1; background:var(--wall); border:1px solid var(--line-soft);
-  display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:2px;
-}
+.grid .card .sq{aspect-ratio:1/1; background:var(--wall); border:1px solid var(--line-soft); display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:2px}
 .grid .card .sq img{width:100%; height:100%; object-fit:cover; box-shadow:none; border-radius:0}
 .grid .card .cap{padding-top:10px}
 .grid .row{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
 
-/* ---------- 4. show preview ---------- */
 .show{display:grid; grid-template-columns:1fr 300px; gap:34px; align-items:start}
 @media (max-width:860px){.show{grid-template-columns:1fr}}
 .stage{background:linear-gradient(180deg,var(--wall),var(--wall-2)); border:1px solid var(--line); border-radius:var(--r); padding:34px; display:flex; align-items:center; justify-content:center; min-height:420px}
@@ -176,7 +138,7 @@ main{padding:30px 0 90px; min-height:60vh}
 .show-side .meta{margin-top:8px}
 .show-side .body{margin:14px 0 0; font-size:14px; color:var(--muted); line-height:1.6}
 .show-actions{display:flex; gap:8px; margin-top:18px; flex-wrap:wrap}
-.strip{display:flex; gap:8px; overflow-x:auto; padding:16px 2px 4px; margin-top:14px; scrollbar-width:thin}
+.strip{display:flex; gap:8px; overflow-x:auto; padding:16px 2px 4px; margin-top:14px}
 .strip button{flex:0 0 auto; width:70px; height:70px; padding:0; border:1px solid var(--line); background:var(--wall); border-radius:2px; overflow:hidden; opacity:.6; transition:.15s}
 .strip button img{width:100%; height:100%; object-fit:cover; display:block}
 .strip button:hover{opacity:.9}
@@ -184,13 +146,9 @@ main{padding:30px 0 90px; min-height:60vh}
 .showbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:20px; padding:12px 16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r)}
 .showbar .label{color:var(--accent)}
 
-/* ---------- 5. price list ---------- */
 .listwrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface)}
 table{border-collapse:collapse; width:100%; min-width:720px; font-size:14px}
-th{
-  text-align:left; font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--faint);
-  font-weight:600; padding:12px 16px; border-bottom:1px solid var(--line); white-space:nowrap;
-}
+th{text-align:left; font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--faint); font-weight:600; padding:12px 16px; border-bottom:1px solid var(--line); white-space:nowrap}
 td{padding:11px 16px; border-bottom:1px solid var(--line-soft); vertical-align:middle}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover{background:var(--raised)}
@@ -199,17 +157,10 @@ td .thumb60{width:52px; height:52px; object-fit:cover; display:block; border:1px
 td .tt{font-family:var(--f-display); font-style:italic; font-size:15px}
 .linkish{background:none; border:0; padding:0; color:var(--accent); font-size:13px; font-weight:500; text-decoration:underline; text-underline-offset:3px}
 
-/* ---------- lightbox ---------- */
-.veil{
-  position:fixed; inset:0; z-index:100; background:rgba(12,15,13,.72);
-  backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:24px;
-}
+.veil{position:fixed; inset:0; z-index:100; background:rgba(12,15,13,.72); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:24px}
 .veil.open{display:flex}
-.sheet{
-  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
-  max-width:1000px; width:100%; max-height:92vh; overflow:auto; box-shadow:var(--shadow-lift);
-}
-.sheet-grid{display:grid; grid-template-columns:1.25fr 1fr; gap:0}
+.sheet{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); max-width:1000px; width:100%; max-height:92vh; overflow:auto; box-shadow:var(--shadow-lift)}
+.sheet-grid{display:grid; grid-template-columns:1.25fr 1fr}
 @media (max-width:800px){.sheet-grid{grid-template-columns:1fr}}
 .sheet-img{background:linear-gradient(180deg,var(--wall),var(--wall-2)); padding:30px; display:flex; align-items:center; justify-content:center}
 .sheet-img .fr{border:10px solid var(--frame); background:var(--mat); padding:12px; box-shadow:var(--shadow)}
@@ -223,403 +174,361 @@ td .tt{font-family:var(--f-display); font-style:italic; font-size:15px}
 .cta-stack button{width:100%; text-align:center; padding:11px 14px}
 .closeX{position:sticky; top:0; float:right; margin:10px 10px 0; background:var(--surface); border:1px solid var(--line); border-radius:100px; width:30px; height:30px; line-height:1; font-size:16px; z-index:2}
 
-/* ---------- inquiry ---------- */
 .form{display:flex; flex-direction:column; gap:12px; padding:28px}
 .form h3{font-size:24px}
 .field{display:flex; flex-direction:column; gap:5px}
-.field label{font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
-input,textarea{
-  font:inherit; font-size:14px; color:var(--ink); background:var(--raised);
-  border:1px solid var(--line); border-radius:var(--r); padding:9px 11px;
-}
-textarea{min-height:110px; resize:vertical; line-height:1.5}
+.field label{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--faint)}
+input,textarea,select{font:inherit; font-size:14px; color:var(--ink); background:var(--raised); border:1px solid var(--line); border-radius:var(--r); padding:8px 10px; font-family:inherit}
+textarea{min-height:90px; resize:vertical; line-height:1.5}
 .form-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 @media (max-width:560px){.form-row{grid-template-columns:1fr}}
 .form-foot{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:4px}
 .hint{font-size:12px; color:var(--faint); line-height:1.5}
 .sheet.narrow{max-width:560px}
 
-/* ---------- footer ---------- */
 footer{border-top:1px solid var(--line); background:var(--surface); padding:34px 0 46px}
 .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:30px}
 @media (max-width:720px){.foot-grid{grid-template-columns:1fr}}
-footer h4{font-family:var(--f-display); font-size:17px; margin:0 0 8px; font-weight:500}
+footer h4{font-size:17px; margin:0 0 8px}
 footer p, footer li{font-size:13px; color:var(--muted); line-height:1.6; margin:0}
 footer ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:5px}
 .empty{padding:70px 0; text-align:center; color:var(--muted)}
+
+/* ================= designer (admin) ================= */
+.adminbar{position:sticky; top:0; z-index:40; background:var(--ink); color:var(--ground); border-bottom:1px solid var(--ink)}
+.adminbar .wrap{display:flex; align-items:center; gap:12px; padding-top:10px; padding-bottom:10px; flex-wrap:wrap}
+.adminbar .label{color:color-mix(in srgb,var(--ground) 60%, transparent)}
+.adminbar strong{font-family:var(--f-display); font-weight:500; font-size:17px}
+.adminbar button{border-radius:var(--r); font-size:12.5px; font-weight:500; padding:6px 12px; border:1px solid color-mix(in srgb,var(--ground) 34%, transparent); background:transparent; color:var(--ground)}
+.adminbar button:hover{background:color-mix(in srgb,var(--ground) 14%, transparent)}
+.adminbar button.key{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600}
+.saved{font-size:12px; color:color-mix(in srgb,var(--ground) 62%, transparent); font-variant-numeric:tabular-nums}
+
+.designer{display:grid; grid-template-columns:352px 1fr; gap:0; align-items:start; min-height:70vh}
+@media (max-width:980px){.designer{grid-template-columns:1fr}}
+.rail-l{border-right:1px solid var(--line); background:var(--surface); position:sticky; top:53px; max-height:calc(100vh - 53px); overflow:auto}
+@media (max-width:980px){.rail-l{position:static; max-height:none; border-right:0; border-bottom:1px solid var(--line)}}
+.tabs{display:flex; border-bottom:1px solid var(--line)}
+.tabs button{flex:1; background:transparent; border:0; border-bottom:2px solid transparent; padding:11px 8px; font-size:13px; font-weight:500; color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent)}
+.pane{padding:16px}
+.pane h4{font-size:15px; margin-bottom:2px}
+.pane .hint{margin:0 0 12px}
+
+.drop{border:1.5px dashed var(--line); border-radius:var(--r); padding:18px 14px; text-align:center; background:var(--raised); transition:.15s; cursor:pointer}
+.drop:hover, .drop.over{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 7%, var(--raised))}
+.drop .big{font-family:var(--f-display); font-size:16px}
+.drop .hint{margin:4px 0 0}
+
+.worklist{list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:4px}
+.worklist li{display:flex; align-items:center; gap:9px; padding:6px; border:1px solid transparent; border-radius:var(--r); background:var(--raised); cursor:grab}
+.worklist li:hover{border-color:var(--line)}
+.worklist li[aria-selected="true"]{border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent)}
+.worklist li.dragging{opacity:.4}
+.worklist li.over{border-top:2px solid var(--accent)}
+.worklist img{width:40px; height:40px; object-fit:cover; border:1px solid var(--line-soft); border-radius:2px; flex:0 0 auto}
+.worklist .wt{flex:1; min-width:0}
+.worklist .wt b{display:block; font-family:var(--f-display); font-size:14px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.worklist .wt span{font-size:11px; color:var(--faint)}
+.worklist .hand{color:var(--faint); font-size:14px; letter-spacing:-2px}
+
+.inspector{border-top:1px solid var(--line); padding:16px; display:flex; flex-direction:column; gap:11px; background:var(--raised)}
+.inspector .field label{font-size:10.5px}
+.inspector input, .inspector select, .inspector textarea{font-size:13px; padding:6px 9px}
+.inspector textarea{min-height:70px}
+.trio{display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px}
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:9px}
+.check{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted)}
+.check input{width:15px; height:15px; padding:0}
+.rail-r{padding:22px 24px 60px; min-width:0}
+.preview-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px}
+.preview-head .label{color:var(--faint)}
+.mini-fmt{display:flex; gap:5px; flex-wrap:wrap}
+.mini-fmt button{border:1px solid var(--line); background:var(--surface); border-radius:100px; padding:4px 11px; font-size:12px; color:var(--muted)}
+.mini-fmt button[aria-pressed="true"]{background:var(--ink); color:var(--ground); border-color:var(--ink)}
+.exportbox{width:100%; min-height:150px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.45}
 @media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
 </style>
 
-<header class="mast">
-  <div class="wrap mast-in">
-    <div class="brand">
-      <h1>Five Ways to <em>Hang It</em></h1>
-      <p>The same fourteen works, laid out five different ways — pick the one that fits how you actually sell, then we build that one for real.</p>
-    </div>
-    <div class="mast-side">
-      <button class="ghost" id="themeBtn" aria-label="Switch theme">Theme</button>
-      <button class="solid" data-inquiry="commission">Commission a piece</button>
-    </div>
-  </div>
-</header>
-
-<div class="wrap">
-  <p class="note"><strong>Demo, not a real catalog.</strong> Every painting below is machine-generated as a stand-in, and the titles, sizes and prices are invented. Swap in photographs of the real work and this becomes a live site.</p>
-</div>
-
-<section class="wrap formats">
-  <div class="formats-head">
-    <div>
-      <div class="label">Step one</div>
-      <h2>Choose a hang</h2>
-      <p>Each format solves a different problem. Click one to see the whole collection redraw.</p>
-    </div>
-  </div>
-  <div class="fmt-row" id="fmtRow"></div>
-</section>
-
-<div class="bar">
-  <div class="wrap bar-in">
-    <div class="chips" id="chips"></div>
-    <div class="spacer"></div>
-    <select class="sel" id="availSel" aria-label="Filter by availability">
-      <option value="all">All works</option>
-      <option value="available">Available</option>
-      <option value="sold">Sold</option>
-      <option value="show">In the next show</option>
-    </select>
-    <span class="count" id="count"></span>
-  </div>
-</div>
-
-<main class="wrap" id="stage"></main>
-
-<footer>
-  <div class="wrap foot-grid">
-    <div>
-      <h4>What this demo covers</h4>
-      <p>Browsing by subject, five gallery layouts, a work detail sheet, and three inquiry paths — purchase, show preview, and commission — all in one static page with no backend.</p>
-    </div>
-    <div>
-      <h4>Subjects</h4>
-      <ul id="footCats"></ul>
-    </div>
-    <div>
-      <h4>Next steps</h4>
-      <ul>
-        <li>Real photography, straight-on, consistent light</li>
-        <li>Inquiries routed to email or a CRM</li>
-        <li>Per-show collections with a private link</li>
-        <li>Print &amp; original pricing tiers</li>
-      </ul>
-    </div>
-  </div>
-</footer>
-
+<div id="app"></div>
 <div class="veil" id="veil" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
 
 <script>
-/* ---------------------------------------------------------------
-   sample collection — replace `works` with real records + photo URLs
----------------------------------------------------------------- */
+/* ============================================================
+   western-gallery — one file, two modes.
+   #admin  designer: upload art, arrange it, export to the repo
+   (no hash) viewer: shows exactly what was arranged
+============================================================ */
+
 const CATS = [
   {key:'animals',   name:'Animals',    blurb:'Horses, cattle, and the wild things'},
   {key:'people',    name:'People',     blurb:'Riders, hands, and portraits'},
   {key:'buildings', name:'Buildings',  blurb:'Barns, line shacks, and main streets'},
   {key:'landscapes',name:'Landscapes', blurb:'Basin, range, and big weather'}
 ];
+const MOTIFS = ['horse','bison','deer','figure','rider','barn','mill','pine','mesa','butte'];
+const CAT_MOTIF = {animals:'horse', people:'rider', buildings:'barn', landscapes:'mesa'};
 
-const works = [
-  {id:1, t:'Morning Remuda',        cat:'animals',    motif:'horse',  med:'Oil on linen',        w:36,h:24, yr:2025, price:6800, status:'available', show:true},
-  {id:2, t:'Dry Wash, First Light', cat:'landscapes', motif:'butte',  med:'Oil on panel',        w:24,h:30, yr:2025, price:4200, status:'available', show:true},
-  {id:3, t:'The Long Winter Herd',  cat:'animals',    motif:'bison',  med:'Oil on linen',        w:48,h:30, yr:2024, price:9500, status:'sold',      show:false},
-  {id:4, t:'Hand at the Gate',      cat:'people',     motif:'figure', med:'Oil on board',        w:18,h:24, yr:2025, price:3400, status:'available', show:true},
-  {id:5, t:'Sheep Camp Wagon',      cat:'buildings',  motif:'barn',   med:'Gouache on paper',    w:14,h:11, yr:2024, price:1450, status:'available', show:false},
-  {id:6, t:'Thunderhead over Rye',  cat:'landscapes', motif:'mesa',   med:'Oil on linen',        w:40,h:20, yr:2025, price:7200, status:'available', show:true},
-  {id:7, t:'Blue Roan, Standing',   cat:'animals',    motif:'horse',  med:'Charcoal on paper',   w:20,h:16, yr:2024, price:1900, status:'sold',      show:false},
-  {id:8, t:'Windmill, Section 12',  cat:'buildings',  motif:'mill',   med:'Oil on panel',        w:16,h:20, yr:2025, price:2600, status:'available', show:true},
-  {id:9, t:'She Rode the Fence',    cat:'people',     motif:'rider',  med:'Oil on linen',        w:30,h:40, yr:2025, price:8800, status:'available', show:true},
-  {id:10,t:'Cottonwood, Late',      cat:'landscapes', motif:'pine',   med:'Oil on panel',        w:12,h:16, yr:2023, price:1200, status:'sold',      show:false},
-  {id:11,t:'Loading Chute',         cat:'buildings',  motif:'barn',   med:'Oil on linen',        w:36,h:24, yr:2024, price:5400, status:'available', show:false},
-  {id:12,t:'Pronghorn Crossing',    cat:'animals',    motif:'deer',   med:'Oil on panel',        w:24,h:12, yr:2025, price:3100, status:'available', show:true},
-  {id:13,t:'Waiting on the Brand',  cat:'people',     motif:'figure', med:'Oil on board',        w:16,h:16, yr:2024, price:2200, status:'sold',      show:false},
-  {id:14,t:'Caprock, Evening',      cat:'landscapes', motif:'mesa',   med:'Oil on linen',        w:60,h:30, yr:2025, price:12500,status:'available', show:true}
+const FORMATS = [
+  {key:'salon',   name:'Salon Hang',   for:'First impressions', best:'Feels like walking into the gallery. Varied sizes, real frames.'},
+  {key:'masonry', name:'Masonry',      for:'Instagram traffic', best:'Every canvas at its true proportion, endless scroll.'},
+  {key:'grid',    name:'Catalog Grid', for:'Buyers',            best:'Uniform tiles with price and status. Fast to compare.'},
+  {key:'show',    name:'Show Preview', for:'Pre-show emails',   best:'One work at a time with the story beside it.'},
+  {key:'list',    name:'Price List',   for:'Collectors',        best:'Dimensions, medium, year, price. No scrolling past art.'}
 ];
 
-const SHOW = {name:'Fall Western Invitational', where:'Booth 214 · Cody, WY', when:'October 3–5'};
+const SAMPLE = {
+  meta:{
+    title:'Five Ways to Hang It', tagline:'The same works, laid out five different ways — pick the one that fits how you sell.',
+    email:'studio@example.com', defaultFormat:'salon', sample:true
+  },
+  show:{name:'Fall Western Invitational', where:'Booth 214 · Cody, WY', when:'October 3–5'},
+  works:[
+    {id:'s1', t:'Morning Remuda',        cat:'animals',    motif:'horse',  med:'Oil on linen',      w:36,h:24, yr:2025, price:6800, status:'available', show:true,  story:''},
+    {id:'s2', t:'Dry Wash, First Light', cat:'landscapes', motif:'butte',  med:'Oil on panel',      w:24,h:30, yr:2025, price:4200, status:'available', show:true,  story:''},
+    {id:'s3', t:'The Long Winter Herd',  cat:'animals',    motif:'bison',  med:'Oil on linen',      w:48,h:30, yr:2024, price:9500, status:'sold',      show:false, story:''},
+    {id:'s4', t:'Hand at the Gate',      cat:'people',     motif:'figure', med:'Oil on board',      w:18,h:24, yr:2025, price:3400, status:'available', show:true,  story:''},
+    {id:'s5', t:'Sheep Camp Wagon',      cat:'buildings',  motif:'barn',   med:'Gouache on paper',  w:14,h:11, yr:2024, price:1450, status:'available', show:false, story:''},
+    {id:'s6', t:'Thunderhead over Rye',  cat:'landscapes', motif:'mesa',   med:'Oil on linen',      w:40,h:20, yr:2025, price:7200, status:'available', show:true,  story:''},
+    {id:'s7', t:'Blue Roan, Standing',   cat:'animals',    motif:'horse',  med:'Charcoal on paper', w:20,h:16, yr:2024, price:1900, status:'sold',      show:false, story:''},
+    {id:'s8', t:'Windmill, Section 12',  cat:'buildings',  motif:'mill',   med:'Oil on panel',      w:16,h:20, yr:2025, price:2600, status:'available', show:true,  story:''},
+    {id:'s9', t:'She Rode the Fence',    cat:'people',     motif:'rider',  med:'Oil on linen',      w:30,h:40, yr:2025, price:8800, status:'available', show:true,  story:''},
+    {id:'s10',t:'Cottonwood, Late',      cat:'landscapes', motif:'pine',   med:'Oil on panel',      w:12,h:16, yr:2023, price:1200, status:'sold',      show:false, story:''},
+    {id:'s11',t:'Loading Chute',         cat:'buildings',  motif:'barn',   med:'Oil on linen',      w:36,h:24, yr:2024, price:5400, status:'available', show:false, story:''},
+    {id:'s12',t:'Pronghorn Crossing',    cat:'animals',    motif:'deer',   med:'Oil on panel',      w:24,h:12, yr:2025, price:3100, status:'available', show:true,  story:''},
+    {id:'s13',t:'Waiting on the Brand',  cat:'people',     motif:'figure', med:'Oil on board',      w:16,h:16, yr:2024, price:2200, status:'sold',      show:false, story:''},
+    {id:'s14',t:'Caprock, Evening',      cat:'landscapes', motif:'mesa',   med:'Oil on linen',      w:60,h:30, yr:2025, price:12500,status:'available', show:true,  story:''}
+  ]
+};
 
-/* ---------------------------------------------------------------
-   placeholder painting generator (canvas)
----------------------------------------------------------------- */
+/* ---------------- image store (IndexedDB) ---------------- */
+const DB={db:null};
+function idb(){
+  if(DB.db) return Promise.resolve(DB.db);
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open('western-gallery',1);
+    r.onupgradeneeded=()=>{ if(!r.result.objectStoreNames.contains('images')) r.result.createObjectStore('images',{keyPath:'id'}); };
+    r.onsuccess=()=>{ DB.db=r.result; res(DB.db); }; r.onerror=()=>rej(r.error);
+  });
+}
+async function idbTx(mode,fn){ const db=await idb(); return new Promise((res,rej)=>{
+  const tx=db.transaction('images',mode), st=tx.objectStore('images'); let out;
+  out=fn(st); tx.oncomplete=()=>res(out&&out.result!==undefined?out.result:out); tx.onerror=()=>rej(tx.error);
+});}
+const idbPut = rec => idbTx('readwrite', st=>st.put(rec));
+const idbDel = id  => idbTx('readwrite', st=>st.delete(id));
+const idbAll = ()  => idbTx('readonly',  st=>st.getAll());
+
+const objUrl={};   // imgId -> blob: URL
+const blobs={};    // imgId -> {name, blob}
+
+/* ---------------- state ---------------- */
+let C = null;                 // active collection
+let published = null;         // collection.json from the repo, if any
+let usingDraft = false;
+let state = {fmt:'salon', cat:'all', avail:'all', hero:null, sel:null, tab:'works'};
+let mode = location.hash.replace('#','') === 'admin' ? 'admin' : 'viewer';
+
+const DRAFT_KEY='wg.draft.v1';
+const loadDraft = ()=>{ try{ return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null'); }catch{ return null; } };
+let saveTimer=null;
+function saveDraft(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(C)); stamp('Saved '+new Date().toLocaleTimeString()); }
+    catch(e){ stamp('Could not save — storage full'); }
+  },350);
+}
+function stamp(txt){ const el=document.getElementById('savedAt'); if(el) el.textContent=txt; }
+
+/* ---------------- placeholder painting ---------------- */
 function seeded(n){let s=(n*2654435761)>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
-
-const SKY = {
-  animals:   [['#c9d4d8','#e6d9c2','#d9a878'],['#9fb2bd','#d6c7ad','#c98f5e']],
-  people:    [['#e3c79a','#d99a63','#9c5b43'],['#f0d7ac','#dda56c','#8d5340']],
-  buildings: [['#b9c3c6','#d3d3c8','#b9a98f'],['#a3b0b6','#c6c6ba','#a89478']],
+const SKY={
+  animals:[['#c9d4d8','#e6d9c2','#d9a878'],['#9fb2bd','#d6c7ad','#c98f5e']],
+  people:[['#e3c79a','#d99a63','#9c5b43'],['#f0d7ac','#dda56c','#8d5340']],
+  buildings:[['#b9c3c6','#d3d3c8','#b9a98f'],['#a3b0b6','#c6c6ba','#a89478']],
   landscapes:[['#7f93ad','#c9a98f','#e0b078'],['#6d7f9c','#b99a86','#d8a06e']]
 };
-const RIDGE = ['#8e8b7e','#6e6d64','#4e5250','#33393a','#1e2426'];
-
-function paint(work, W){
-  const r = seeded(work.id * 97);
-  const H = Math.round(W * work.h / work.w);
-  const c = document.createElement('canvas');
-  const dpr = Math.min(devicePixelRatio || 1, 2);
-  c.width = W*dpr; c.height = H*dpr;
-  const x = c.getContext('2d'); x.scale(dpr,dpr);
-
-  const ramp = SKY[work.cat][work.id % 2];
-  const g = x.createLinearGradient(0,0,0,H);
+const RIDGE=['#8e8b7e','#6e6d64','#4e5250','#33393a','#1e2426'];
+function hash(s){let h=2166136261;for(let i=0;i<String(s).length;i++){h^=String(s).charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function paint(work,W){
+  const seed=hash(work.id), r=seeded(seed);
+  const H=Math.max(40,Math.round(W*(work.h||24)/(work.w||36)));
+  const c=document.createElement('canvas'), dpr=Math.min(devicePixelRatio||1,2);
+  c.width=W*dpr; c.height=H*dpr; const x=c.getContext('2d'); x.scale(dpr,dpr);
+  const ramp=(SKY[work.cat]||SKY.landscapes)[seed%2];
+  const g=x.createLinearGradient(0,0,0,H);
   g.addColorStop(0,ramp[0]); g.addColorStop(.55,ramp[1]); g.addColorStop(1,ramp[2]);
-  x.fillStyle = g; x.fillRect(0,0,W,H);
-
-  // sun
-  const sx = W*(.2+r()*.6), sy = H*(.2+r()*.22), sr = W*.045;
-  const sg = x.createRadialGradient(sx,sy,0,sx,sy,sr*4.5);
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  const sx=W*(.2+r()*.6), sy=H*(.2+r()*.22), sr=W*.045;
+  const sg=x.createRadialGradient(sx,sy,0,sx,sy,sr*4.5);
   sg.addColorStop(0,'rgba(255,244,214,.95)'); sg.addColorStop(1,'rgba(255,244,214,0)');
-  x.fillStyle = sg; x.beginPath(); x.arc(sx,sy,sr*4.5,0,7); x.fill();
+  x.fillStyle=sg; x.beginPath(); x.arc(sx,sy,sr*4.5,0,7); x.fill();
   x.fillStyle='rgba(255,250,232,.9)'; x.beginPath(); x.arc(sx,sy,sr,0,7); x.fill();
-
-  // ridges
-  const bands = 4, base = H*.52;
+  const bands=4, base=H*.52;
   for(let b=0;b<bands;b++){
-    const y0 = base + (H-base)*(b/bands)*.72;
-    const amp = H*(.10 - b*.018) + 4;
-    x.beginPath(); x.moveTo(0,H);
-    x.lineTo(0, y0 + Math.sin(r()*6)*amp);
-    let ph1=r()*6, ph2=r()*6;
-    for(let px=0; px<=W; px+=8){
-      const t = px/W;
-      const y = y0 + Math.sin(t*(2+b)*Math.PI + ph1)*amp + Math.sin(t*(6+b*3)*Math.PI + ph2)*amp*.34;
-      x.lineTo(px,y);
+    const y0=base+(H-base)*(b/bands)*.72, amp=H*(.10-b*.018)+4;
+    x.beginPath(); x.moveTo(0,H); x.lineTo(0,y0);
+    const ph1=r()*6, ph2=r()*6;
+    for(let px=0;px<=W;px+=8){
+      const t=px/W;
+      x.lineTo(px, y0+Math.sin(t*(2+b)*Math.PI+ph1)*amp+Math.sin(t*(6+b*3)*Math.PI+ph2)*amp*.34);
     }
     x.lineTo(W,H); x.closePath();
-    x.fillStyle = RIDGE[b+1]; x.globalAlpha = .92; x.fill(); x.globalAlpha = 1;
+    x.fillStyle=RIDGE[b+1]; x.globalAlpha=.92; x.fill(); x.globalAlpha=1;
   }
-
-  // motif silhouette
-  const ink = '#171c1e';
-  const gy = base + (H-base)*.80;
-  x.fillStyle = ink;
-  const mid = W*(.28 + r()*.42);
-  const S = Math.min(W,H)*0.26;
-  const M = {horse:horse, bison:bison, deer:deer, figure:figure, rider:rider, barn:barn, mill:mill, pine:pine, mesa:mesa, butte:butte}[work.motif] || pine;
-  M(x, mid, gy, S);
-
-  // grain + vignette
+  x.fillStyle='#171c1e';
+  const gy=base+(H-base)*.80, mid=W*(.28+r()*.42), S=Math.min(W,H)*0.26;
+  (MOTIF[work.motif]||MOTIF[CAT_MOTIF[work.cat]]||MOTIF.pine)(x,mid,gy,S);
   x.globalAlpha=.05;
-  for(let i=0;i<W*H/90;i++){ x.fillStyle = r()>.5?'#fff':'#000'; x.fillRect(r()*W, r()*H, 1.4,1.4); }
+  for(let i=0;i<W*H/90;i++){ x.fillStyle=r()>.5?'#fff':'#000'; x.fillRect(r()*W,r()*H,1.4,1.4); }
   x.globalAlpha=1;
-  const v = x.createRadialGradient(W/2,H/2,Math.min(W,H)*.28, W/2,H/2,Math.max(W,H)*.75);
+  const v=x.createRadialGradient(W/2,H/2,Math.min(W,H)*.28,W/2,H/2,Math.max(W,H)*.75);
   v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(20,16,10,.28)');
   x.fillStyle=v; x.fillRect(0,0,W,H);
-  return c.toDataURL('image/jpeg', .86);
+  return c.toDataURL('image/jpeg',.86);
 }
-function blob(x,pts){x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);x.closePath();x.fill()}
+function blob2(x,pts){x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);x.closePath();x.fill()}
 function leg(x,X,Y,w,h){x.fillRect(X-w/2,Y,w,h)}
-function horse(x,X,Y,s){
-  const b=s*.9;
-  leg(x,X-b*.42,Y-s*.34,s*.075,s*.36); leg(x,X-b*.26,Y-s*.34,s*.07,s*.36);
-  leg(x,X+b*.30,Y-s*.34,s*.075,s*.36); leg(x,X+b*.45,Y-s*.34,s*.07,s*.36);
-  x.beginPath(); x.ellipse(X,Y-s*.52,b*.55,s*.20,0,0,7); x.fill();
-  blob(x,[[X-b*.50,Y-s*.60],[X-b*.72,Y-s*.98],[X-b*.60,Y-s*1.02],[X-b*.34,Y-s*.64]]); // neck
-  blob(x,[[X-b*.74,Y-s*.96],[X-b*.94,Y-s*.94],[X-b*.92,Y-s*.82],[X-b*.66,Y-s*.86]]); // head
-  blob(x,[[X+b*.52,Y-s*.62],[X+b*.72,Y-s*.30],[X+b*.60,Y-s*.28],[X+b*.46,Y-s*.56]]); // tail
-}
-function bison(x,X,Y,s){
-  leg(x,X-s*.34,Y-s*.30,s*.09,s*.32); leg(x,X+s*.30,Y-s*.30,s*.09,s*.32);
-  blob(x,[[X-s*.60,Y-s*.42],[X-s*.48,Y-s*.92],[X-s*.10,Y-s*1.00],[X+s*.30,Y-s*.74],[X+s*.62,Y-s*.66],[X+s*.60,Y-s*.30]]);
-  blob(x,[[X-s*.60,Y-s*.50],[X-s*.86,Y-s*.62],[X-s*.90,Y-s*.36],[X-s*.58,Y-s*.32]]);
-}
-function deer(x,X,Y,s){
-  leg(x,X-s*.30,Y-s*.30,s*.055,s*.32); leg(x,X+s*.28,Y-s*.30,s*.055,s*.32);
-  x.beginPath(); x.ellipse(X,Y-s*.46,s*.40,s*.15,0,0,7); x.fill();
-  blob(x,[[X-s*.34,Y-s*.52],[X-s*.50,Y-s*.94],[X-s*.38,Y-s*.96],[X-s*.20,Y-s*.56]]);
-  blob(x,[[X-s*.52,Y-s*.92],[X-s*.72,Y-s*.98],[X-s*.68,Y-s*.86],[X-s*.44,Y-s*.82]]);
-}
-function figure(x,X,Y,s){
-  leg(x,X-s*.11,Y-s*.52,s*.10,s*.52); leg(x,X+s*.11,Y-s*.52,s*.10,s*.52);
-  blob(x,[[X-s*.20,Y-s*.52],[X-s*.17,Y-s*1.02],[X+s*.17,Y-s*1.02],[X+s*.20,Y-s*.52]]);
-  x.beginPath(); x.arc(X,Y-s*1.12,s*.11,0,7); x.fill();
-  blob(x,[[X-s*.32,Y-s*1.20],[X+s*.32,Y-s*1.20],[X+s*.30,Y-s*1.26],[X-s*.30,Y-s*1.26]]);
-  blob(x,[[X-s*.14,Y-s*1.26],[X+s*.14,Y-s*1.26],[X+s*.11,Y-s*1.42],[X-s*.11,Y-s*1.42]]);
-}
-function rider(x,X,Y,s){ horse(x,X,Y,s*.92); figure(x,X-s*.04,Y-s*.66,s*.62); }
-function barn(x,X,Y,s){
-  const w=s*1.25,h=s*.78;
-  x.fillRect(X-w/2,Y-h,w,h);
-  blob(x,[[X-w*.58,Y-h],[X,Y-h-s*.46],[X+w*.58,Y-h]]);
-  x.fillRect(X+w*.62,Y-s*1.16,s*.30,s*1.16);
-  blob(x,[[X+w*.60,Y-s*1.16],[X+w*.62+s*.15,Y-s*1.36],[X+w*.62+s*.32,Y-s*1.16]]);
-}
-function mill(x,X,Y,s){
-  x.save(); x.strokeStyle=x.fillStyle; x.lineWidth=Math.max(1.4,s*.035);
-  x.beginPath(); x.moveTo(X-s*.20,Y); x.lineTo(X-s*.05,Y-s*1.10);
-  x.moveTo(X+s*.20,Y); x.lineTo(X+s*.05,Y-s*1.10); x.stroke();
-  x.beginPath(); x.moveTo(X-s*.15,Y-s*.34); x.lineTo(X+s*.15,Y-s*.34);
-  x.moveTo(X-s*.10,Y-s*.70); x.lineTo(X+s*.10,Y-s*.70); x.stroke(); x.restore();
-  const cx=X, cy=Y-s*1.20;
-  for(let i=0;i<9;i++){ const a=i/9*Math.PI*2;
-    blob(x,[[cx,cy],[cx+Math.cos(a)*s*.30,cy+Math.sin(a)*s*.30],[cx+Math.cos(a+.34)*s*.30,cy+Math.sin(a+.34)*s*.30]]); }
-  x.beginPath(); x.arc(cx,cy,s*.06,0,7); x.fill();
-}
-function pine(x,X,Y,s){
-  x.fillRect(X-s*.05,Y-s*.42,s*.10,s*.42);
-  for(let i=0;i<4;i++){ const t=i/4, w=s*(.62-t*.13), yy=Y-s*(.34+t*.34);
-    blob(x,[[X-w,yy],[X,yy-s*.46],[X+w,yy]]); }
-}
-function mesa(x,X,Y,s){
-  blob(x,[[X-s*1.5,Y],[X-s*1.2,Y-s*.86],[X-s*.3,Y-s*.96],[X+s*.9,Y-s*.80],[X+s*1.4,Y]]);
-}
-function butte(x,X,Y,s){
-  blob(x,[[X-s*.7,Y],[X-s*.56,Y-s*1.30],[X-s*.10,Y-s*1.42],[X+s*.34,Y-s*1.24],[X+s*.62,Y]]);
-  blob(x,[[X+s*.80,Y],[X+s*.90,Y-s*.66],[X+s*1.20,Y-s*.72],[X+s*1.34,Y]]);
-}
+const MOTIF={
+  horse(x,X,Y,s){const b=s*.9;
+    leg(x,X-b*.42,Y-s*.34,s*.075,s*.36); leg(x,X-b*.26,Y-s*.34,s*.07,s*.36);
+    leg(x,X+b*.30,Y-s*.34,s*.075,s*.36); leg(x,X+b*.45,Y-s*.34,s*.07,s*.36);
+    x.beginPath(); x.ellipse(X,Y-s*.52,b*.55,s*.20,0,0,7); x.fill();
+    blob2(x,[[X-b*.50,Y-s*.60],[X-b*.72,Y-s*.98],[X-b*.60,Y-s*1.02],[X-b*.34,Y-s*.64]]);
+    blob2(x,[[X-b*.74,Y-s*.96],[X-b*.94,Y-s*.94],[X-b*.92,Y-s*.82],[X-b*.66,Y-s*.86]]);
+    blob2(x,[[X+b*.52,Y-s*.62],[X+b*.72,Y-s*.30],[X+b*.60,Y-s*.28],[X+b*.46,Y-s*.56]]);},
+  bison(x,X,Y,s){
+    leg(x,X-s*.34,Y-s*.30,s*.09,s*.32); leg(x,X+s*.30,Y-s*.30,s*.09,s*.32);
+    blob2(x,[[X-s*.60,Y-s*.42],[X-s*.48,Y-s*.92],[X-s*.10,Y-s*1.00],[X+s*.30,Y-s*.74],[X+s*.62,Y-s*.66],[X+s*.60,Y-s*.30]]);
+    blob2(x,[[X-s*.60,Y-s*.50],[X-s*.86,Y-s*.62],[X-s*.90,Y-s*.36],[X-s*.58,Y-s*.32]]);},
+  deer(x,X,Y,s){
+    leg(x,X-s*.30,Y-s*.30,s*.055,s*.32); leg(x,X+s*.28,Y-s*.30,s*.055,s*.32);
+    x.beginPath(); x.ellipse(X,Y-s*.46,s*.40,s*.15,0,0,7); x.fill();
+    blob2(x,[[X-s*.34,Y-s*.52],[X-s*.50,Y-s*.94],[X-s*.38,Y-s*.96],[X-s*.20,Y-s*.56]]);
+    blob2(x,[[X-s*.52,Y-s*.92],[X-s*.72,Y-s*.98],[X-s*.68,Y-s*.86],[X-s*.44,Y-s*.82]]);},
+  figure(x,X,Y,s){
+    leg(x,X-s*.11,Y-s*.52,s*.10,s*.52); leg(x,X+s*.11,Y-s*.52,s*.10,s*.52);
+    blob2(x,[[X-s*.20,Y-s*.52],[X-s*.17,Y-s*1.02],[X+s*.17,Y-s*1.02],[X+s*.20,Y-s*.52]]);
+    x.beginPath(); x.arc(X,Y-s*1.12,s*.11,0,7); x.fill();
+    blob2(x,[[X-s*.32,Y-s*1.20],[X+s*.32,Y-s*1.20],[X+s*.30,Y-s*1.26],[X-s*.30,Y-s*1.26]]);
+    blob2(x,[[X-s*.14,Y-s*1.26],[X+s*.14,Y-s*1.26],[X+s*.11,Y-s*1.42],[X-s*.11,Y-s*1.42]]);},
+  rider(x,X,Y,s){ MOTIF.horse(x,X,Y,s*.92); MOTIF.figure(x,X-s*.04,Y-s*.66,s*.62); },
+  barn(x,X,Y,s){ const w=s*1.25,h=s*.78;
+    x.fillRect(X-w/2,Y-h,w,h);
+    blob2(x,[[X-w*.58,Y-h],[X,Y-h-s*.46],[X+w*.58,Y-h]]);
+    x.fillRect(X+w*.62,Y-s*1.16,s*.30,s*1.16);
+    blob2(x,[[X+w*.60,Y-s*1.16],[X+w*.62+s*.15,Y-s*1.36],[X+w*.62+s*.32,Y-s*1.16]]);},
+  mill(x,X,Y,s){
+    x.save(); x.strokeStyle=x.fillStyle; x.lineWidth=Math.max(1.4,s*.035);
+    x.beginPath(); x.moveTo(X-s*.20,Y); x.lineTo(X-s*.05,Y-s*1.10);
+    x.moveTo(X+s*.20,Y); x.lineTo(X+s*.05,Y-s*1.10); x.stroke();
+    x.beginPath(); x.moveTo(X-s*.15,Y-s*.34); x.lineTo(X+s*.15,Y-s*.34);
+    x.moveTo(X-s*.10,Y-s*.70); x.lineTo(X+s*.10,Y-s*.70); x.stroke(); x.restore();
+    const cx=X, cy=Y-s*1.20;
+    for(let i=0;i<9;i++){ const a=i/9*Math.PI*2;
+      blob2(x,[[cx,cy],[cx+Math.cos(a)*s*.30,cy+Math.sin(a)*s*.30],[cx+Math.cos(a+.34)*s*.30,cy+Math.sin(a+.34)*s*.30]]); }
+    x.beginPath(); x.arc(cx,cy,s*.06,0,7); x.fill();},
+  pine(x,X,Y,s){
+    x.fillRect(X-s*.05,Y-s*.42,s*.10,s*.42);
+    for(let i=0;i<4;i++){ const t=i/4,w=s*(.62-t*.13),yy=Y-s*(.34+t*.34);
+      blob2(x,[[X-w,yy],[X,yy-s*.46],[X+w,yy]]); }},
+  mesa(x,X,Y,s){ blob2(x,[[X-s*1.5,Y],[X-s*1.2,Y-s*.86],[X-s*.3,Y-s*.96],[X+s*.9,Y-s*.80],[X+s*1.4,Y]]); },
+  butte(x,X,Y,s){
+    blob2(x,[[X-s*.7,Y],[X-s*.56,Y-s*1.30],[X-s*.10,Y-s*1.42],[X+s*.34,Y-s*1.24],[X+s*.62,Y]]);
+    blob2(x,[[X+s*.80,Y],[X+s*.90,Y-s*.66],[X+s*1.20,Y-s*.72],[X+s*1.34,Y]]);}
+};
 
-const cache = {};
-function src(w, width){
-  const k = w.id+'@'+width;
-  if(!cache[k]) cache[k] = paint(w, width);
-  return cache[k];
+const pcache={};
+function imgSrc(w,width){
+  if(w.imgId && objUrl[w.imgId]) return objUrl[w.imgId];
+  if(w.img) return w.img;
+  const k=w.id+'|'+w.cat+'|'+w.motif+'|'+w.w+'x'+w.h+'@'+width;
+  if(!pcache[k]) pcache[k]=paint(w,width);
+  return pcache[k];
 }
-
-/* ---------------------------------------------------------------
-   formats
----------------------------------------------------------------- */
-const FORMATS = [
-  {key:'salon',   name:'Salon Hang',   best:'Feels like walking into the gallery. Varied sizes, real frames.', for:'First impressions'},
-  {key:'masonry', name:'Masonry',      best:'Every canvas at its true proportion, endless scroll.',            for:'Instagram traffic'},
-  {key:'grid',    name:'Catalog Grid', best:'Uniform tiles with price and status. Fast to compare.',           for:'Buyers'},
-  {key:'show',    name:'Show Preview', best:'One work at a time with the story beside it.',                    for:'Pre-show emails'},
-  {key:'list',    name:'Price List',   best:'Dimensions, medium, year, price. No scrolling past art.',         for:'Collectors & galleries'}
-];
-
-let state = {fmt:'salon', cat:'all', avail:'all', hero:null};
-
-/* format thumbnails, drawn as tiny abstractions of each layout */
-function fmtThumb(key){
-  const c=document.createElement('canvas'), W=200,H=88, d=2;
-  c.width=W*d; c.height=H*d; c.style.width='100%'; c.style.height='100%';
-  const x=c.getContext('2d'); x.scale(d,d);
-  const ink=getComputedStyle(document.body).getPropertyValue('--faint').trim();
-  x.fillStyle=ink; x.globalAlpha=.55;
-  const R=(a,b,w,h)=>x.fillRect(a,b,w,h);
-  if(key==='salon'){ R(16,26,34,26); R(58,18,42,34); R(108,28,26,22); R(142,20,44,32); x.globalAlpha=.3; R(10,60,180,1); }
-  if(key==='masonry'){ const cols=[10,58,106,154], hs=[[30,44],[44,30],[26,50],[38,34]];
-    cols.forEach((cx,i)=>{ R(cx,10,36,hs[i][0]); R(cx,10+hs[i][0]+6,36,hs[i][1]); }); }
-  if(key==='grid'){ for(let r=0;r<2;r++) for(let cI=0;cI<4;cI++) R(12+cI*46,12+r*38,36,30); }
-  if(key==='show'){ R(14,12,110,64); x.globalAlpha=.32; for(let i=0;i<4;i++) R(134,12+i*17,52,13); }
-  if(key==='list'){ for(let i=0;i<5;i++){ R(14,12+i*14,18,10); x.globalAlpha=.3; R(38,15+i*14,110,4); R(156,15+i*14,30,4); x.globalAlpha=.55; } }
-  return c;
+function imgTag(w,width,attrs){
+  return '<img alt="'+esc(w.t)+'" src="'+imgSrc(w,width)+'" '+(attrs||'')+
+    ' onerror="this.onerror=null;this.src=\''+paintFallback(w,width)+'\'">';
 }
+function paintFallback(w,width){ const k='fb'+w.id+'@'+width; if(!pcache[k]) pcache[k]=paint(w,width); return pcache[k]; }
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function renderFormats(){
-  const row=document.getElementById('fmtRow'); row.innerHTML='';
-  FORMATS.forEach(f=>{
-    const b=document.createElement('button');
-    b.className='fmt'; b.setAttribute('aria-pressed', state.fmt===f.key);
-    b.innerHTML='<div class="thumb"></div><div class="nm">'+f.name+'</div>'+
-      '<div class="bf"><b>'+f.for+'.</b> '+f.best+'</div>';
-    b.querySelector('.thumb').appendChild(fmtThumb(f.key));
-    b.onclick=()=>{ state.fmt=f.key; state.hero=null; renderFormats(); render(); };
-    row.appendChild(b);
-  });
-}
-
-function renderChips(){
-  const el=document.getElementById('chips'); el.innerHTML='';
-  [{key:'all',name:'Everything'}].concat(CATS).forEach(c=>{
-    const b=document.createElement('button');
-    b.className='chip'; b.textContent=c.name; b.setAttribute('aria-pressed', state.cat===c.key);
-    b.onclick=()=>{ state.cat=c.key; state.hero=null; renderChips(); render(); };
-    el.appendChild(b);
-  });
-}
-
-function visible(){
-  return works.filter(w=>
-    (state.cat==='all' || w.cat===state.cat) &&
-    (state.avail==='all' || (state.avail==='show' ? w.show : w.status===state.avail))
-  );
-}
-const money = n => '$'+n.toLocaleString('en-US');
-const dims  = w => w.w+' × '+w.h+' in';
+/* ---------------- helpers ---------------- */
+const money = n => '$'+Number(n||0).toLocaleString('en-US');
+const dims  = w => (w.w||0)+' × '+(w.h||0)+' in';
+const catName = k => (CATS.find(c=>c.key===k)||{name:'—'}).name;
 function statusTag(w){
   if(w.status==='sold') return '<span class="tag sold">Sold</span>';
   if(w.show) return '<span class="tag avail">Available</span> <span class="tag show">In show</span>';
   return '<span class="tag avail">Available</span>';
 }
-function capHTML(w, withPrice){
-  return '<div class="piece-title"><i>'+w.t+'</i></div>'+
-    '<div class="meta">'+w.med+' · '+dims(w)+' · '+w.yr+'</div>'+
-    (withPrice ? '<div class="price">'+(w.status==='sold'?'—':money(w.price))+' '+statusTag(w)+'</div>' : '');
+function capHTML(w,withPrice){
+  return '<div class="piece-title"><i>'+esc(w.t)+'</i></div>'+
+    '<div class="meta">'+esc(w.med)+' · '+dims(w)+(w.yr?' · '+w.yr:'')+'</div>'+
+    (withPrice?'<div class="price">'+(w.status==='sold'?'—':money(w.price))+' '+statusTag(w)+'</div>':'');
+}
+function visible(){
+  return C.works.filter(w=>
+    (state.cat==='all'||w.cat===state.cat) &&
+    (state.avail==='all'||(state.avail==='show'?w.show:w.status===state.avail)));
 }
 
-/* ---------------------------------------------------------------
-   layout renderers
----------------------------------------------------------------- */
-function render(){
-  const list = visible(), stage = document.getElementById('stage');
-  document.getElementById('count').textContent = list.length+' of '+works.length+' works';
+/* ---------------- gallery renderers ---------------- */
+function renderGallery(stage,list){
   stage.innerHTML='';
-  if(!list.length){ stage.innerHTML='<p class="empty">Nothing matches that combination. Try another subject.</p>'; return; }
-  ({salon:salonView, masonry:masonryView, grid:gridView, show:showView, list:listView})[state.fmt](stage, list);
+  if(!list.length){ stage.innerHTML='<p class="empty">Nothing matches that combination.</p>'; return; }
+  ({salon:salonView,masonry:masonryView,grid:gridView,show:showView,list:listView})[state.fmt](stage,list);
 }
-
-function salonView(stage, list){
-  const wall=document.createElement('div');
-  wall.className='salon';
+function salonView(stage,list){
+  const wall=document.createElement('div'); wall.className='salon';
   const inner=document.createElement('div'); inner.className='salon-wall';
   list.forEach(w=>{
-    const scale = 96 + Math.min(w.w,60)*2.1;
-    const b=document.createElement('button'); b.className='hung';
-    b.innerHTML='<div class="fr" style="width:'+Math.round(scale)+'px"><img alt="'+w.t+'" src="'+src(w,420)+'" width="'+w.w+'" height="'+w.h+'"></div>'+
+    const scale=96+Math.min(w.w||24,60)*2.1;
+    const b=document.createElement('button'); b.className='hung'; b.dataset.work=w.id;
+    b.innerHTML='<div class="fr" style="width:'+Math.round(scale)+'px">'+imgTag(w,420,'style="width:100%;height:auto"')+'</div>'+
       '<div class="cap">'+capHTML(w,false)+'</div>';
-    b.onclick=()=>openWork(w); inner.appendChild(b);
+    inner.appendChild(b);
   });
   wall.appendChild(inner);
   wall.insertAdjacentHTML('beforeend','<div class="rail"></div><div class="plinth">Hung salon-style · click any work for details</div>');
   stage.appendChild(wall);
 }
-
-function masonryView(stage, list){
+function masonryView(stage,list){
   const m=document.createElement('div'); m.className='masonry';
   list.forEach(w=>{
-    const b=document.createElement('button'); b.className='card';
-    b.innerHTML='<img alt="'+w.t+'" src="'+src(w,520)+'"><div class="cap">'+capHTML(w,true)+'</div>';
-    b.onclick=()=>openWork(w); m.appendChild(b);
+    const b=document.createElement('button'); b.className='card'; b.dataset.work=w.id;
+    b.innerHTML=imgTag(w,520)+'<div class="cap">'+capHTML(w,true)+'</div>';
+    m.appendChild(b);
   });
   stage.appendChild(m);
 }
-
-function gridView(stage, list){
+function gridView(stage,list){
   const g=document.createElement('div'); g.className='grid';
   list.forEach(w=>{
-    const b=document.createElement('button'); b.className='card';
-    b.innerHTML='<div class="sq"><img alt="'+w.t+'" src="'+src(w,520)+'"></div>'+
-      '<div class="cap"><div class="piece-title"><i>'+w.t+'</i></div>'+
+    const b=document.createElement('button'); b.className='card'; b.dataset.work=w.id;
+    b.innerHTML='<div class="sq">'+imgTag(w,520)+'</div>'+
+      '<div class="cap"><div class="piece-title"><i>'+esc(w.t)+'</i></div>'+
       '<div class="row"><span class="meta">'+dims(w)+'</span>'+
       '<span class="price">'+(w.status==='sold'?'Sold':money(w.price))+'</span></div></div>';
-    b.onclick=()=>openWork(w); g.appendChild(b);
+    g.appendChild(b);
   });
   stage.appendChild(g);
 }
-
-function showView(stage, list){
-  const hero = list.find(w=>w.id===state.hero) || list[0];
-  state.hero = hero.id;
+function showView(stage,list){
+  const hero=list.find(w=>w.id===state.hero)||list[0]; state.hero=hero.id;
+  const story=hero.story||'Add a paragraph in the designer — where it was painted, what you were after. A sentence or two in your own voice turns a photograph into a work someone wants to live with.';
   const el=document.createElement('div');
-  el.innerHTML =
-    '<div class="showbar"><span class="label">Next show</span><strong>'+SHOW.name+'</strong>'+
-    '<span class="meta">'+SHOW.where+' · '+SHOW.when+'</span>'+
+  el.innerHTML=
+    '<div class="showbar"><span class="label">Next show</span><strong>'+esc(C.show.name)+'</strong>'+
+    '<span class="meta">'+esc(C.show.where)+' · '+esc(C.show.when)+'</span>'+
     '<span class="spacer"></span><span class="meta">'+list.length+' works travelling</span></div>'+
-    '<div class="show"><div><div class="stage"><div class="fr"><img id="heroImg" alt="'+hero.t+'" src="'+src(hero,900)+'"></div></div>'+
+    '<div class="show"><div><div class="stage"><div class="fr">'+imgTag(hero,900,'id="heroImg"')+'</div></div>'+
     '<div class="strip" id="strip"></div></div>'+
-    '<div class="show-side"><h3><i>'+hero.t+'</i></h3>'+
-    '<div class="meta">'+hero.med+' · '+dims(hero)+' · '+hero.yr+'</div>'+
+    '<div class="show-side"><h3><i>'+esc(hero.t)+'</i></h3>'+
+    '<div class="meta">'+esc(hero.med)+' · '+dims(hero)+(hero.yr?' · '+hero.yr:'')+'</div>'+
     '<div class="price" style="margin-top:8px">'+(hero.status==='sold'?'Sold':money(hero.price))+' '+statusTag(hero)+'</div>'+
-    '<p class="body">Painted from studies made on the ranch road east of town. This is the kind of note that turns a photograph into a work someone wants to live with — a paragraph per piece, in your own voice.</p>'+
+    '<p class="body">'+esc(story)+'</p>'+
     '<div class="show-actions">'+
       '<button class="solid" data-inquiry="purchase" data-id="'+hero.id+'">Ask about this piece</button>'+
       '<button class="ghost" data-inquiry="hold" data-id="'+hero.id+'">Hold it for the show</button>'+
@@ -627,123 +536,437 @@ function showView(stage, list){
   stage.appendChild(el);
   const strip=el.querySelector('#strip');
   list.forEach(w=>{
-    const b=document.createElement('button');
-    b.innerHTML='<img alt="'+w.t+'" src="'+src(w,200)+'">';
-    b.setAttribute('aria-current', w.id===hero.id);
-    b.title=w.t;
-    b.onclick=()=>{ state.hero=w.id; render(); };
+    const b=document.createElement('button'); b.title=w.t;
+    b.innerHTML=imgTag(w,200); b.setAttribute('aria-current',w.id===hero.id);
+    b.onclick=()=>{ state.hero=w.id; rerender(); };
     strip.appendChild(b);
   });
 }
-
-function listView(stage, list){
-  const rows = list.map(w=>
-    '<tr><td><img class="thumb60" alt="" src="'+src(w,160)+'"></td>'+
-    '<td><span class="tt">'+w.t+'</span></td>'+
-    '<td class="meta">'+w.med+'</td>'+
+function listView(stage,list){
+  const rows=list.map(w=>
+    '<tr><td>'+imgTag(w,160,'class="thumb60"')+'</td>'+
+    '<td><span class="tt">'+esc(w.t)+'</span></td>'+
+    '<td class="meta">'+esc(w.med)+'</td>'+
     '<td class="num">'+dims(w)+'</td>'+
-    '<td class="num">'+w.yr+'</td>'+
+    '<td class="num">'+(w.yr||'')+'</td>'+
     '<td class="num price">'+(w.status==='sold'?'—':money(w.price))+'</td>'+
     '<td>'+statusTag(w)+'</td>'+
-    '<td><button class="linkish" data-open="'+w.id+'">View</button></td></tr>').join('');
+    '<td><button class="linkish" data-work="'+w.id+'">View</button></td></tr>').join('');
   const d=document.createElement('div'); d.className='listwrap';
   d.innerHTML='<table><thead><tr><th></th><th>Title</th><th>Medium</th><th>Size</th><th>Year</th><th>Price</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
   stage.appendChild(d);
 }
 
-/* ---------------------------------------------------------------
-   detail sheet + inquiries
----------------------------------------------------------------- */
+/* ---------------- format thumbnails ---------------- */
+function fmtThumb(key){
+  const c=document.createElement('canvas'),W=200,H=88,d=2;
+  c.width=W*d; c.height=H*d; c.style.width='100%'; c.style.height='100%';
+  const x=c.getContext('2d'); x.scale(d,d);
+  x.fillStyle=getComputedStyle(document.body).getPropertyValue('--faint').trim()||'#888';
+  x.globalAlpha=.55; const R=(a,b,w,h)=>x.fillRect(a,b,w,h);
+  if(key==='salon'){ R(16,26,34,26); R(58,18,42,34); R(108,28,26,22); R(142,20,44,32); x.globalAlpha=.3; R(10,60,180,1); }
+  if(key==='masonry'){ const cols=[10,58,106,154],hs=[[30,44],[44,30],[26,50],[38,34]];
+    cols.forEach((cx,i)=>{ R(cx,10,36,hs[i][0]); R(cx,10+hs[i][0]+6,36,hs[i][1]); }); }
+  if(key==='grid'){ for(let r=0;r<2;r++) for(let i=0;i<4;i++) R(12+i*46,12+r*38,36,30); }
+  if(key==='show'){ R(14,12,110,64); x.globalAlpha=.32; for(let i=0;i<4;i++) R(134,12+i*17,52,13); }
+  if(key==='list'){ for(let i=0;i<5;i++){ R(14,12+i*14,18,10); x.globalAlpha=.3; R(38,15+i*14,110,4); R(156,15+i*14,30,4); x.globalAlpha=.55; } }
+  return c;
+}
+
+/* ---------------- viewer ---------------- */
+function viewerHTML(){
+  return ''+
+  '<header class="mast"><div class="wrap mast-in">'+
+    '<div class="brand"><h1>'+esc(C.meta.title)+'</h1><p>'+esc(C.meta.tagline)+'</p></div>'+
+    '<div class="mast-side"><button class="ghost" id="themeBtn">Theme</button>'+
+    '<button class="solid" data-inquiry="commission">Commission a piece</button></div>'+
+  '</div></header>'+
+  '<div class="wrap" id="banners"></div>'+
+  '<section class="wrap formats"><div class="formats-head"><div class="label">Step one</div>'+
+    '<h2>Choose a hang</h2><p>Each format solves a different problem. Click one to see the whole collection redraw.</p></div>'+
+    '<div class="fmt-row" id="fmtRow"></div></section>'+
+  '<div class="bar"><div class="wrap bar-in"><div class="chips" id="chips"></div><div class="spacer"></div>'+
+    '<select class="sel" id="availSel" aria-label="Filter by availability">'+
+      '<option value="all">All works</option><option value="available">Available</option>'+
+      '<option value="sold">Sold</option><option value="show">In the next show</option></select>'+
+    '<span class="count" id="count"></span></div></div>'+
+  '<main class="wrap" id="stage"></main>'+
+  '<footer><div class="wrap foot-grid">'+
+    '<div><h4>Inquiries</h4><p>Purchase, a look before the next show, or a commission — every message goes straight to the studio at '+esc(C.meta.email)+'.</p></div>'+
+    '<div><h4>Subjects</h4><ul>'+CATS.map(c=>'<li><strong style="color:var(--ink);font-weight:600">'+c.name+'</strong> — '+c.blurb+'</li>').join('')+'</ul></div>'+
+    '<div><h4>Next show</h4><p>'+esc(C.show.name)+'<br>'+esc(C.show.where)+'<br>'+esc(C.show.when)+'</p></div>'+
+  '</div></footer>';
+}
+function mountViewer(){
+  document.getElementById('app').innerHTML=viewerHTML();
+  const banners=document.getElementById('banners');
+  if(C.meta.sample) banners.innerHTML='<p class="note"><strong>Demo, not a real catalog.</strong> Every painting is machine-generated as a stand-in and the details are invented. Open <a href="#admin">the designer</a> to upload the real work.</p>';
+  else if(usingDraft) banners.innerHTML='<p class="note draft"><b>Unpublished draft.</b> This is your local arrangement, visible only in this browser. Export it from <a href="#admin">the designer</a> and commit the files to publish.</p>';
+  document.getElementById('availSel').value=state.avail;
+  document.getElementById('availSel').onchange=e=>{ state.avail=e.target.value; state.hero=null; rerender(); };
+  document.getElementById('themeBtn').onclick=toggleTheme;
+  const row=document.getElementById('fmtRow');
+  FORMATS.forEach(f=>{
+    const b=document.createElement('button'); b.className='fmt';
+    b.setAttribute('aria-pressed',state.fmt===f.key);
+    b.innerHTML='<div class="thumb"></div><div class="nm">'+f.name+'</div><div class="bf"><b>'+f.for+'.</b> '+f.best+'</div>';
+    b.querySelector('.thumb').appendChild(fmtThumb(f.key));
+    b.onclick=()=>{ state.fmt=f.key; state.hero=null; mountViewer(); };
+    row.appendChild(b);
+  });
+  const chips=document.getElementById('chips');
+  [{key:'all',name:'Everything'}].concat(CATS).forEach(c=>{
+    const b=document.createElement('button'); b.className='chip'; b.textContent=c.name;
+    b.setAttribute('aria-pressed',state.cat===c.key);
+    b.onclick=()=>{ state.cat=c.key; state.hero=null; mountViewer(); };
+    chips.appendChild(b);
+  });
+  const list=visible();
+  document.getElementById('count').textContent=list.length+' of '+C.works.length+' works';
+  renderGallery(document.getElementById('stage'),list);
+}
+
+/* ---------------- designer ---------------- */
+function mountAdmin(){
+  document.getElementById('app').innerHTML=''+
+  '<div class="adminbar"><div class="wrap">'+
+    '<span class="label">Designer</span><strong>'+esc(C.meta.title)+'</strong>'+
+    '<span class="spacer"></span><span class="saved" id="savedAt">Draft saved in this browser</span>'+
+    '<button id="exportBtn" class="key">Export for the repo</button>'+
+    '<button id="viewBtn">View site</button>'+
+  '</div></div>'+
+  '<div class="designer">'+
+    '<aside class="rail-l">'+
+      '<div class="tabs"><button data-tab="works">Works</button><button data-tab="settings">Gallery</button></div>'+
+      '<div class="pane" id="pane"></div>'+
+      '<div class="inspector" id="inspector" hidden></div>'+
+    '</aside>'+
+    '<section class="rail-r">'+
+      '<div class="preview-head"><span class="label">Live preview</span><div class="mini-fmt" id="miniFmt"></div>'+
+      '<span class="spacer"></span><span class="count" id="count"></span></div>'+
+      '<div id="stage"></div>'+
+    '</section>'+
+  '</div>';
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    b.setAttribute('aria-selected', state.tab===b.dataset.tab);
+    b.onclick=()=>{ state.tab=b.dataset.tab; mountAdmin(); };
+  });
+  document.getElementById('viewBtn').onclick=()=>{ location.hash=''; };
+  document.getElementById('exportBtn').onclick=openExport;
+  const mf=document.getElementById('miniFmt');
+  FORMATS.forEach(f=>{
+    const b=document.createElement('button'); b.textContent=f.name;
+    b.setAttribute('aria-pressed',state.fmt===f.key);
+    b.onclick=()=>{ state.fmt=f.key; C.meta.defaultFormat=f.key; saveDraft(); mountAdmin(); };
+    mf.appendChild(b);
+  });
+  state.tab==='works' ? worksPane() : settingsPane();
+  const list=visible();
+  document.getElementById('count').textContent=C.works.length+' works · opens as '+(FORMATS.find(f=>f.key===C.meta.defaultFormat)||FORMATS[0]).name;
+  renderGallery(document.getElementById('stage'),list);
+}
+
+function worksPane(){
+  const p=document.getElementById('pane');
+  p.innerHTML='<h4>Artwork</h4><p class="hint">Drop photographs in, then drag to set the order visitors see.</p>'+
+    '<div class="drop" id="drop"><div class="big">Drop images here</div>'+
+    '<p class="hint">or click to choose · JPG, PNG, WebP</p></div>'+
+    '<input type="file" id="file" accept="image/*" multiple hidden>'+
+    '<ul class="worklist" id="wl"></ul>'+
+    (C.meta.sample?'<p class="hint" style="margin-top:12px">These are sample works. Adding your first photograph clears them.</p>':'');
+  const drop=p.querySelector('#drop'), file=p.querySelector('#file');
+  drop.onclick=()=>file.click();
+  file.onchange=e=>addFiles([...e.target.files]);
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+  drop.addEventListener('drop',e=>addFiles([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'))));
+
+  const ul=p.querySelector('#wl');
+  C.works.forEach((w,i)=>{
+    const li=document.createElement('li');
+    li.draggable=true; li.dataset.i=i;
+    li.setAttribute('aria-selected', state.sel===w.id);
+    li.innerHTML='<span class="hand">⣿</span>'+imgTag(w,120)+
+      '<span class="wt"><b>'+esc(w.t)+'</b><span>'+catName(w.cat)+' · '+dims(w)+'</span></span>';
+    li.onclick=()=>{ state.sel=w.id; mountAdmin(); };
+    li.addEventListener('dragstart',e=>{ li.classList.add('dragging'); e.dataTransfer.setData('text/plain',i); });
+    li.addEventListener('dragend',()=>li.classList.remove('dragging'));
+    li.addEventListener('dragover',e=>{ e.preventDefault(); li.classList.add('over'); });
+    li.addEventListener('dragleave',()=>li.classList.remove('over'));
+    li.addEventListener('drop',e=>{
+      e.preventDefault(); li.classList.remove('over');
+      const from=Number(e.dataTransfer.getData('text/plain')), to=i;
+      if(from===to||isNaN(from)) return;
+      C.works.splice(to,0,C.works.splice(from,1)[0]);
+      saveDraft(); mountAdmin();
+    });
+    ul.appendChild(li);
+  });
+  const w=C.works.find(x=>x.id===state.sel);
+  const insp=document.getElementById('inspector');
+  if(!w){ insp.hidden=true; return; }
+  insp.hidden=false;
+  insp.innerHTML=
+    '<div class="field"><label for="i-t">Title</label><input id="i-t" value="'+esc(w.t)+'"></div>'+
+    '<div class="duo"><div class="field"><label for="i-cat">Subject</label><select id="i-cat">'+
+      CATS.map(c=>'<option value="'+c.key+'"'+(w.cat===c.key?' selected':'')+'>'+c.name+'</option>').join('')+'</select></div>'+
+    '<div class="field"><label for="i-status">Status</label><select id="i-status">'+
+      ['available','sold'].map(s=>'<option value="'+s+'"'+(w.status===s?' selected':'')+'>'+s[0].toUpperCase()+s.slice(1)+'</option>').join('')+'</select></div></div>'+
+    '<div class="field"><label for="i-med">Medium</label><input id="i-med" value="'+esc(w.med)+'"></div>'+
+    '<div class="trio">'+
+      '<div class="field"><label for="i-w">Width in</label><input id="i-w" type="number" min="1" value="'+(w.w||'')+'"></div>'+
+      '<div class="field"><label for="i-h">Height in</label><input id="i-h" type="number" min="1" value="'+(w.h||'')+'"></div>'+
+      '<div class="field"><label for="i-yr">Year</label><input id="i-yr" type="number" value="'+(w.yr||'')+'"></div>'+
+    '</div>'+
+    '<div class="duo"><div class="field"><label for="i-price">Price USD</label><input id="i-price" type="number" min="0" value="'+(w.price||'')+'"></div>'+
+    '<div class="field"><label for="i-motif">Stand-in art</label><select id="i-motif"'+(w.imgId||w.img?' disabled':'')+'>'+
+      MOTIFS.map(m=>'<option value="'+m+'"'+(w.motif===m?' selected':'')+'>'+m+'</option>').join('')+'</select></div></div>'+
+    '<div class="field"><label for="i-story">Story shown in Show Preview</label><textarea id="i-story">'+esc(w.story||'')+'</textarea></div>'+
+    '<label class="check"><input type="checkbox" id="i-show"'+(w.show?' checked':'')+'> Travelling to the next show</label>'+
+    '<div class="form-foot"><button class="ghost sm danger" id="i-del">Remove work</button>'+
+    '<span class="spacer"></span><span class="hint">'+(w.imgId?'Your photograph':'Generated stand-in')+'</span></div>';
+
+  const bind=(id,key,cast)=>{ const el=insp.querySelector(id); if(!el) return;
+    el.oninput=()=>{ w[key]=cast?cast(el.value):el.value; saveDraft(); softRefresh(); }; };
+  bind('#i-t','t'); bind('#i-med','med'); bind('#i-story','story');
+  bind('#i-w','w',Number); bind('#i-h','h',Number); bind('#i-yr','yr',Number); bind('#i-price','price',Number);
+  insp.querySelector('#i-cat').onchange=e=>{ w.cat=e.target.value; saveDraft(); mountAdmin(); };
+  insp.querySelector('#i-status').onchange=e=>{ w.status=e.target.value; saveDraft(); mountAdmin(); };
+  const mot=insp.querySelector('#i-motif'); if(mot) mot.onchange=e=>{ w.motif=e.target.value; saveDraft(); mountAdmin(); };
+  insp.querySelector('#i-show').onchange=e=>{ w.show=e.target.checked; saveDraft(); mountAdmin(); };
+  insp.querySelector('#i-del').onclick=()=>{
+    if(!confirm('Remove “'+w.t+'” from the gallery?')) return;
+    if(w.imgId){ idbDel(w.imgId); delete blobs[w.imgId]; }
+    C.works=C.works.filter(x=>x.id!==w.id); state.sel=null; saveDraft(); mountAdmin();
+  };
+}
+function softRefresh(){
+  const list=visible();
+  renderGallery(document.getElementById('stage'),list);
+  const li=document.querySelector('.worklist li[aria-selected="true"] .wt');
+  const w=C.works.find(x=>x.id===state.sel);
+  if(li&&w) li.innerHTML='<b>'+esc(w.t)+'</b><span>'+catName(w.cat)+' · '+dims(w)+'</span>';
+}
+
+function settingsPane(){
+  const p=document.getElementById('pane');
+  p.innerHTML='<h4>Gallery</h4><p class="hint">Shown across the site and used on every inquiry.</p>'+
+    '<div style="display:flex;flex-direction:column;gap:11px">'+
+    '<div class="field"><label for="g-title">Gallery name</label><input id="g-title" value="'+esc(C.meta.title)+'"></div>'+
+    '<div class="field"><label for="g-tag">Tagline</label><textarea id="g-tag" style="min-height:60px">'+esc(C.meta.tagline)+'</textarea></div>'+
+    '<div class="field"><label for="g-email">Inquiry email</label><input id="g-email" type="email" value="'+esc(C.meta.email)+'"></div>'+
+    '<div class="field"><label for="g-fmt">Format the site opens in</label><select id="g-fmt">'+
+      FORMATS.map(f=>'<option value="'+f.key+'"'+(C.meta.defaultFormat===f.key?' selected':'')+'>'+f.name+'</option>').join('')+'</select></div>'+
+    '<h4 style="margin-top:8px">Next show</h4>'+
+    '<div class="field"><label for="s-name">Show name</label><input id="s-name" value="'+esc(C.show.name)+'"></div>'+
+    '<div class="field"><label for="s-where">Booth / city</label><input id="s-where" value="'+esc(C.show.where)+'"></div>'+
+    '<div class="field"><label for="s-when">Dates</label><input id="s-when" value="'+esc(C.show.when)+'"></div>'+
+    '<div class="form-foot" style="margin-top:6px"><button class="ghost sm danger" id="g-reset">Discard draft</button></div>'+
+    '</div>';
+  const b=(id,obj,key,after)=>{ const el=p.querySelector(id);
+    el.oninput=()=>{ obj[key]=el.value; C.meta.sample=false; saveDraft(); if(after) after(); }; };
+  b('#g-title',C.meta,'title'); b('#g-tag',C.meta,'tagline'); b('#g-email',C.meta,'email');
+  b('#s-name',C.show,'name',softRefresh); b('#s-where',C.show,'where',softRefresh); b('#s-when',C.show,'when',softRefresh);
+  p.querySelector('#g-fmt').onchange=e=>{ C.meta.defaultFormat=e.target.value; state.fmt=e.target.value; saveDraft(); mountAdmin(); };
+  p.querySelector('#g-reset').onclick=async()=>{
+    if(!confirm('Discard the local draft and go back to what is published? Uploaded images are deleted too.')) return;
+    localStorage.removeItem(DRAFT_KEY);
+    for(const id of Object.keys(blobs)) await idbDel(id);
+    location.reload();
+  };
+}
+
+/* ---------------- uploads ---------------- */
+const slug = s => String(s||'untitled').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'untitled';
+function readSize(file){
+  return new Promise(res=>{
+    const url=URL.createObjectURL(file), im=new Image();
+    im.onload=()=>{ res({w:im.naturalWidth,h:im.naturalHeight,url}); };
+    im.onerror=()=>res({w:4,h:3,url});
+    im.src=url;
+  });
+}
+async function addFiles(files){
+  if(!files.length) return;
+  if(C.meta.sample){ C.works=[]; C.meta.sample=false; }
+  for(const f of files){
+    const {w:pw,h:ph,url}=await readSize(f);
+    const id='w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const long=24, ratio=pw/ph;
+    const inches = ratio>=1 ? {w:long, h:Math.round(long/ratio)} : {w:Math.round(long*ratio), h:long};
+    const rec={id, name:f.name, type:f.type, blob:f};
+    await idbPut(rec); blobs[id]={name:f.name,blob:f}; objUrl[id]=url;
+    C.works.push({
+      id, imgId:id, file:f.name,
+      t:f.name.replace(/\.[a-z0-9]+$/i,'').replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),
+      cat:'landscapes', motif:'mesa', med:'Oil on linen',
+      w:inches.w, h:inches.h, yr:new Date().getFullYear(),
+      price:0, status:'available', show:false, story:''
+    });
+  }
+  state.sel=C.works[C.works.length-1].id;
+  saveDraft(); mountAdmin();
+}
+
+/* ---------------- export (zip, stored) ---------------- */
+const CRCT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRCT[(c^u8[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0}
+function zip(files){ // [{name, data:Uint8Array}]
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  const u16=n=>[n&255,(n>>8)&255], u32=n=>[n&255,(n>>8)&255,(n>>16)&255,(n>>>24)&255];
+  files.forEach(f=>{
+    const name=enc.encode(f.name), crc=crc32(f.data), len=f.data.length;
+    const local=[...u32(0x04034b50),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
+      ...u32(crc),...u32(len),...u32(len),...u16(name.length),...u16(0)];
+    parts.push(new Uint8Array(local), name, f.data);
+    central.push([...u32(0x02014b50),...u16(20),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
+      ...u32(crc),...u32(len),...u32(len),...u16(name.length),...u16(0),...u16(0),...u16(0),...u16(0),
+      ...u32(0),...u32(off)], name);
+    off+=local.length+name.length+len;
+  });
+  const cdStart=off; const cd=[];
+  for(let i=0;i<central.length;i+=2){ cd.push(new Uint8Array(central[i]), central[i+1]); off+=central[i].length+central[i+1].length; }
+  const eocd=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),
+    ...u32(off-cdStart),...u32(cdStart),...u16(0)]);
+  return new Blob([...parts,...cd,eocd],{type:'application/zip'});
+}
+function exportJSON(){
+  const used={};
+  const works=C.works.map(w=>{
+    const o={id:w.id,t:w.t,cat:w.cat,med:w.med,w:w.w,h:w.h,yr:w.yr,price:w.price,status:w.status,show:!!w.show,story:w.story||''};
+    if(w.imgId&&blobs[w.imgId]){
+      const ext=(blobs[w.imgId].name.match(/\.[a-z0-9]+$/i)||['.jpg'])[0].toLowerCase();
+      let base=slug(w.t); while(used[base+ext]) base+='-2';
+      used[base+ext]=w.imgId; o.img='photos/'+base+ext;
+    } else { o.motif=w.motif; }
+    return o;
+  });
+  return {json:{meta:{...C.meta,sample:false},show:C.show,works}, used};
+}
+async function openExport(){
+  const {json,used}=exportJSON();
+  const text=JSON.stringify(json,null,2);
+  const n=Object.keys(used).length;
+  openSheet('<div class="form"><div><div class="label">Publish</div><h3>Export for the repo</h3></div>'+
+    '<p class="hint">Downloads <b>gallery-export.zip</b> — <code>collection.json</code> plus '+n+' photograph'+(n===1?'':'s')+' in <code>photos/</code>. Unzip it into the repo root, overwrite what is there, and commit. The site reads <code>collection.json</code> on load.</p>'+
+    '<div class="form-foot"><button class="solid" id="dlZip">Download zip</button>'+
+    '<button class="ghost" id="cpJson">Copy collection.json</button>'+
+    '<span class="hint" id="expNote"></span></div>'+
+    '<div class="field"><label for="expBox">collection.json</label><textarea class="exportbox" id="expBox" readonly>'+esc(text)+'</textarea></div>'+
+    '</div>', true);
+  document.getElementById('dlZip').onclick=async()=>{
+    const note=document.getElementById('expNote'); note.textContent='Packing…';
+    const files=[{name:'collection.json',data:new TextEncoder().encode(text)}];
+    for(const [fname,imgId] of Object.entries(used)){
+      const buf=await blobs[imgId].blob.arrayBuffer();
+      files.push({name:'photos/'+fname,data:new Uint8Array(buf)});
+    }
+    const b=zip(files), a=document.createElement('a');
+    a.href=URL.createObjectURL(b); a.download='gallery-export.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    note.textContent='Downloaded. Unzip into the repo root and commit.';
+  };
+  document.getElementById('cpJson').onclick=async()=>{
+    const note=document.getElementById('expNote');
+    try{ await navigator.clipboard.writeText(text); note.textContent='Copied.'; }
+    catch{ note.textContent='Copy blocked — select the text below instead.'; }
+  };
+}
+
+/* ---------------- detail sheet + inquiries ---------------- */
 const veil=document.getElementById('veil'), sheet=document.getElementById('sheet');
-function openSheet(html, narrow){
-  sheet.className = 'sheet' + (narrow?' narrow':'');
-  sheet.innerHTML = '<button class="closeX" data-close aria-label="Close">×</button>' + html;
+function openSheet(html,narrow){
+  sheet.className='sheet'+(narrow?' narrow':'');
+  sheet.innerHTML='<button class="closeX" data-close aria-label="Close">×</button>'+html;
   veil.classList.add('open'); document.body.style.overflow='hidden';
-  const f = sheet.querySelector('input,textarea,button:not([data-close])'); if(f) f.focus();
+  const f=sheet.querySelector('input,textarea,button:not([data-close])'); if(f) f.focus();
 }
 function closeSheet(){ veil.classList.remove('open'); document.body.style.overflow=''; }
-veil.addEventListener('click', e=>{ if(e.target===veil || e.target.closest('[data-close]')) closeSheet(); });
-addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheet(); });
+veil.addEventListener('click',e=>{ if(e.target===veil||e.target.closest('[data-close]')) closeSheet(); });
+addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
 
 function openWork(w){
-  openSheet(
-    '<div class="sheet-grid"><div class="sheet-img"><div class="fr"><img alt="'+w.t+'" src="'+src(w,900)+'"></div></div>'+
-    '<div class="sheet-body"><h3><i>'+w.t+'</i></h3>'+
-    '<dl class="dl"><dt>Medium</dt><dd>'+w.med+'</dd><dt>Size</dt><dd>'+dims(w)+'</dd>'+
-    '<dt>Year</dt><dd>'+w.yr+'</dd><dt>Subject</dt><dd>'+CATS.find(c=>c.key===w.cat).name+'</dd>'+
+  openSheet('<div class="sheet-grid"><div class="sheet-img"><div class="fr">'+imgTag(w,900)+'</div></div>'+
+    '<div class="sheet-body"><h3><i>'+esc(w.t)+'</i></h3>'+
+    (w.story?'<p class="meta" style="line-height:1.6">'+esc(w.story)+'</p>':'')+
+    '<dl class="dl"><dt>Medium</dt><dd>'+esc(w.med)+'</dd><dt>Size</dt><dd>'+dims(w)+'</dd>'+
+    '<dt>Year</dt><dd>'+(w.yr||'—')+'</dd><dt>Subject</dt><dd>'+catName(w.cat)+'</dd>'+
     '<dt>Price</dt><dd>'+(w.status==='sold'?'Sold':money(w.price))+'</dd></dl>'+
     '<div>'+statusTag(w)+'</div>'+
     '<div class="cta-stack">'+
       (w.status==='sold'
-        ? '<button class="solid" data-inquiry="commission" data-id="'+w.id+'">Commission something similar</button>'
-        : '<button class="solid" data-inquiry="purchase" data-id="'+w.id+'">Inquire to purchase</button>')+
+        ?'<button class="solid" data-inquiry="commission" data-id="'+w.id+'">Commission something similar</button>'
+        :'<button class="solid" data-inquiry="purchase" data-id="'+w.id+'">Inquire to purchase</button>')+
       '<button class="ghost" data-inquiry="hold" data-id="'+w.id+'">See it at the next show</button>'+
       '<button class="ghost" data-inquiry="commission" data-id="'+w.id+'">Commission a piece</button>'+
-    '</div>'+
-    '<p class="hint">Inquiries go straight to the studio inbox — no middleman, no commission split.</p>'+
-    '</div></div>');
+    '</div><p class="hint">Inquiries go straight to the studio inbox.</p></div></div>');
 }
-
-const INTENT = {
-  purchase:{h:'Inquire to purchase', sub:'Tell me a little about where it would hang and I will follow up with availability, framing and shipping.'},
-  hold:    {h:'See it before the show', sub:'I will send images and hold the piece for you through the opening at '+SHOW.name+'.'},
-  commission:{h:'Commission a piece', sub:'Subject, size, timing, budget range — as much or as little as you know so far.'}
-};
-function openInquiry(kind, id){
-  const w = works.find(x=>x.id===Number(id));
-  const i = INTENT[kind] || INTENT.purchase;
-  const ref = w ? '\n\nWork: "'+w.t+'" ('+w.med+', '+dims(w)+', '+w.yr+')' : '';
+function openInquiry(kind,id){
+  const w=C.works.find(x=>x.id===id);
+  const INTENT={
+    purchase:{h:'Inquire to purchase',sub:'Tell me where it would hang and I will follow up with availability, framing and shipping.'},
+    hold:{h:'See it before the show',sub:'I will send images and hold the piece for you through the opening at '+C.show.name+'.'},
+    commission:{h:'Commission a piece',sub:'Subject, size, timing, budget range — as much or as little as you know so far.'}
+  };
+  const i=INTENT[kind]||INTENT.purchase;
+  const ref=w?'\n\nWork: "'+w.t+'" ('+w.med+', '+dims(w)+(w.yr?', '+w.yr:'')+')':'';
   const seed = kind==='commission'
     ? 'I would like to commission a piece.\n\nSubject:\nApproximate size:\nNeeded by:\nBudget range:'+ref
-    : kind==='hold'
-      ? 'I would like to see this work at '+SHOW.name+' ('+SHOW.where+').'+ref
-      : 'I am interested in purchasing this work.'+ref;
-  openSheet(
-    '<form class="form" id="inq"><div><div class="label">'+(w?w.t:'Studio inquiry')+'</div><h3>'+i.h+'</h3></div>'+
-    '<p class="hint" style="margin:-6px 0 2px">'+i.sub+'</p>'+
+    : kind==='hold' ? 'I would like to see this work at '+C.show.name+' ('+C.show.where+').'+ref
+    : 'I am interested in purchasing this work.'+ref;
+  openSheet('<form class="form" id="inq"><div><div class="label">'+esc(w?w.t:'Studio inquiry')+'</div><h3>'+i.h+'</h3></div>'+
+    '<p class="hint" style="margin:-6px 0 2px">'+esc(i.sub)+'</p>'+
     '<div class="form-row"><div class="field"><label for="nm">Your name</label><input id="nm" required></div>'+
     '<div class="field"><label for="em">Email</label><input id="em" type="email" required></div></div>'+
-    '<div class="field"><label for="msg">Message</label><textarea id="msg">'+seed+'</textarea></div>'+
+    '<div class="field"><label for="msg">Message</label><textarea id="msg" style="min-height:110px">'+esc(seed)+'</textarea></div>'+
     '<div class="form-foot"><button class="solid" type="submit">Send inquiry</button>'+
     '<button class="ghost" type="button" data-copy>Copy message</button>'+
     '<span class="hint" id="inqNote">Opens in your email app.</span></div>'+
-    '<p class="hint">This demo has no server, so it hands the message to your email client. On the real site it would post to the studio inbox and a CRM.</p>'+
-    '</form>', true);
-
+    '<p class="hint">This site has no server, so it hands the message to your email client. Point the form at a form service to collect them properly.</p></form>',true);
   const f=document.getElementById('inq');
-  const compose=()=>({
-    subj:i.h+(w?' — "'+w.t+'"':''),
-    body:document.getElementById('msg').value+'\n\n— '+document.getElementById('nm').value+'\n'+document.getElementById('em').value
-  });
-  f.addEventListener('submit', e=>{
-    e.preventDefault(); const m=compose();
-    location.href='mailto:studio@example.com?subject='+encodeURIComponent(m.subj)+'&body='+encodeURIComponent(m.body);
-    document.getElementById('inqNote').textContent='Handed off to your email app.';
-  });
-  f.querySelector('[data-copy]').addEventListener('click', async ()=>{
-    const m=compose(); const note=document.getElementById('inqNote');
+  const compose=()=>({subj:i.h+(w?' — "'+w.t+'"':''),
+    body:document.getElementById('msg').value+'\n\n— '+document.getElementById('nm').value+'\n'+document.getElementById('em').value});
+  f.onsubmit=e=>{ e.preventDefault(); const m=compose();
+    location.href='mailto:'+C.meta.email+'?subject='+encodeURIComponent(m.subj)+'&body='+encodeURIComponent(m.body);
+    document.getElementById('inqNote').textContent='Handed off to your email app.'; };
+  f.querySelector('[data-copy]').onclick=async()=>{
+    const m=compose(), note=document.getElementById('inqNote');
     try{ await navigator.clipboard.writeText(m.subj+'\n\n'+m.body); note.textContent='Copied to your clipboard.'; }
     catch{ note.textContent='Copy blocked here — select the text instead.'; }
-  });
+  };
 }
-
-document.addEventListener('click', e=>{
-  const inq=e.target.closest('[data-inquiry]'); if(inq){ openInquiry(inq.dataset.inquiry, inq.dataset.id); return; }
-  const op=e.target.closest('[data-open]'); if(op){ openWork(works.find(w=>w.id===Number(op.dataset.open))); }
+document.addEventListener('click',e=>{
+  const inq=e.target.closest('[data-inquiry]'); if(inq){ openInquiry(inq.dataset.inquiry,inq.dataset.id); return; }
+  const wk=e.target.closest('[data-work]');
+  if(wk && mode==='viewer'){ const w=C.works.find(x=>x.id===wk.dataset.work); if(w) openWork(w); return; }
+  if(wk && mode==='admin'){ state.sel=wk.dataset.work; state.tab='works'; mountAdmin(); }
 });
 
-/* ---------------------------------------------------------------
-   chrome
----------------------------------------------------------------- */
-document.getElementById('availSel').onchange = e=>{ state.avail=e.target.value; state.hero=null; render(); };
-document.getElementById('themeBtn').onclick = ()=>{
-  const now = document.documentElement.getAttribute('data-theme')
-    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  document.documentElement.setAttribute('data-theme', now==='dark' ? 'light' : 'dark');
-  renderFormats();
-};
-document.getElementById('footCats').innerHTML =
-  CATS.map(c=>'<li><strong style="color:var(--ink);font-weight:600">'+c.name+'</strong> — '+c.blurb+'</li>').join('');
+/* ---------------- boot ---------------- */
+function toggleTheme(){
+  const now=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme', now==='dark'?'light':'dark');
+  rerender();
+}
+function rerender(){ mode==='admin'?mountAdmin():mountViewer(); }
+addEventListener('hashchange',()=>{ mode=location.hash.replace('#','')==='admin'?'admin':'viewer'; state.sel=null; rerender(); });
 
-renderFormats(); renderChips(); render();
+async function boot(){
+  try{
+    const r=await fetch('collection.json',{cache:'no-store'});
+    if(r.ok) published=await r.json();
+  }catch{}
+  const draft=loadDraft();
+  if(draft&&draft.works){ C=draft; usingDraft=true; }
+  else C=published||JSON.parse(JSON.stringify(SAMPLE));
+  C.meta=Object.assign({defaultFormat:'salon',email:'studio@example.com',title:'Gallery',tagline:''},C.meta);
+  C.show=Object.assign({name:'',where:'',when:''},C.show);
+  state.fmt=C.meta.defaultFormat||'salon';
+  try{
+    const recs=await idbAll();
+    (recs||[]).forEach(r=>{ blobs[r.id]={name:r.name,blob:r.blob}; objUrl[r.id]=URL.createObjectURL(r.blob); });
+  }catch{}
+  rerender();
+}
+boot();
 </script>

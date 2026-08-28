@@ -1,14 +1,16 @@
 # western-gallery
 
-A single-file gallery site for a working artist. No build step, no backend —
-`index.html` is the whole site.
+A gallery site for a working artist. Two modes, one file, no backend.
+
+- **Viewer** — `index.html` — what visitors see: the collection arranged the way you arranged it.
+- **Designer** — `index.html#admin` — where you upload artwork, arrange it, and export.
 
 **Live:** https://markfyoung0711.github.io/western-gallery/
 
-## What it does
+## Viewer
 
-Visitors browse the collection by subject (animals, people, buildings,
-landscapes) and switch the same works between five hang formats:
+Visitors browse by subject (animals, people, buildings, landscapes) and switch the
+same works between five hang formats:
 
 | Format | Best for |
 | --- | --- |
@@ -18,35 +20,47 @@ landscapes) and switch the same works between five hang formats:
 | Show Preview | Pre-show emails — one work large, story beside it |
 | Price List | Collectors and galleries — medium, size, year, price |
 
-Three inquiry paths run off every work: purchase, hold it for the next show,
-and commission. Light and dark themes both ship.
+Every work opens a detail sheet with three inquiry paths: purchase, hold it for the
+next show, or commission. Light and dark themes both ship.
 
-## Putting real work in it
+## Designer
 
-Everything lives in the `works` array near the top of the `<script>` block:
+Open `#admin`. Left rail is the work list and inspector, right side is a live
+preview of the actual site — edits appear there as you type.
 
-```js
-{id:1, t:'Morning Remuda', cat:'animals', motif:'horse',
- med:'Oil on linen', w:36, h:24, yr:2025, price:6800,
- status:'available', show:true}
-```
+- **Upload** — drop images on the panel, or click to choose. Dimensions in inches
+  are guessed from the photo's proportions; correct them in the inspector.
+- **Arrange** — drag rows in the work list. That order is the order visitors see.
+- **Edit** — title, subject, medium, size, year, price, status, show flag, and the
+  story paragraph that appears in Show Preview.
+- **Gallery tab** — gallery name, tagline, inquiry email, the format the site opens
+  in, and the next show's name, booth and dates.
+- **Export for the repo** — downloads `gallery-export.zip`.
 
-- `cat` — one of `animals`, `people`, `buildings`, `landscapes`
-- `w` / `h` — inches; drives both the printed size and the on-screen proportion
-- `status` — `available` or `sold`; a sold piece offers a commission instead of a buy button
-- `show` — `true` puts it in the Show Preview collection
+Work in progress is saved to this browser as you go (metadata in `localStorage`,
+images in IndexedDB), so you can close the tab and come back. Nothing is published
+until you export and commit.
 
-Photographs replace the generated placeholders: add `img:'photos/morning-remuda.jpg'`
-to a record and the `src()` function uses it instead of drawing one. Shoot the work
-straight on, in consistent light, longest edge around 2000px.
+## Publishing
 
-Show details (name, booth, dates) are in the `SHOW` object just below `works`.
+1. In the designer, click **Export for the repo**.
+2. Unzip `gallery-export.zip` into the repo root. It contains `collection.json` and
+   a `photos/` folder.
+3. Commit and push. GitHub Pages serves the update in a minute or so.
 
-## Receiving inquiries
+`collection.json` is the published collection; the viewer fetches it on load. Until
+it exists, the site shows generated stand-in paintings so the layouts are visible.
 
-The demo hands the composed message to the visitor's email client, which works
-but loses anything the visitor doesn't send. To collect them properly, point the
-form at a form service (Formspree, Basin, Netlify Forms) and replace the
-`mailto:` line in the submit handler with a `fetch()` POST.
+A local draft takes priority over `collection.json` in your own browser, with a
+banner saying so — that is your unpublished work, not what visitors see. **Discard
+draft** in the Gallery tab clears it.
 
-Change `studio@example.com` to the real studio address either way.
+## Notes
+
+`#admin` is a convenience, not a lock. The site is static, so anyone can open that
+URL — but they are only editing their own browser's copy, and the published site
+contains exactly what you committed. Nothing a visitor does can change it.
+
+Inquiries currently hand the composed message to the visitor's email client. To
+collect them properly, point the form at a form service (Formspree, Basin, Netlify
+Forms) and replace the `mailto:` line in the submit handler with a `fetch()` POST.
