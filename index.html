@@ -1,6 +1,8 @@
 <title>Five Ways to Hang It</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;1,6..96,400&family=Archivo:wght@400;500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <style>
 :root{
   --ground:#E8E9E3; --surface:#F5F5F0; --raised:#FFFFFF;
@@ -247,6 +249,11 @@ footer ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:col
 .mini-fmt button{border:1px solid var(--line); background:var(--surface); border-radius:100px; padding:4px 11px; font-size:12px; color:var(--muted)}
 .mini-fmt button[aria-pressed="true"]{background:var(--ink); color:var(--ground); border-color:var(--ink)}
 .exportbox{width:100%; min-height:150px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.45}
+.gate{max-width:430px; margin:12vh auto; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:28px; display:flex; flex-direction:column; gap:13px}
+.gate h2{font-size:24px}
+.gate code{font-family:ui-monospace,Menlo,monospace; font-size:12px; background:var(--raised); border:1px solid var(--line-soft); padding:1px 4px; border-radius:2px}
+.draftdot{font-style:normal; font-size:9.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--warm); border:1px solid color-mix(in srgb,var(--warm) 40%,transparent); border-radius:2px; padding:1px 4px; margin-left:5px}
+.adminbar .saved{white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
 </style>
 
@@ -328,6 +335,90 @@ let published = null;         // collection.json from the repo, if any
 let usingDraft = false;
 let state = {fmt:'salon', cat:'all', avail:'all', hero:null, sel:null, tab:'works'};
 let mode = location.hash.replace('#','') === 'admin' ? 'admin' : 'viewer';
+
+/* ---------------- backend (Supabase) ----------------
+   Configured in config.js. With no config the whole app falls back to the
+   local draft + collection.json path, so the site is never broken. */
+const CFG_OK = !!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.supabase);
+let sb=null, backend=false, session=null, isAdmin=false, authMsg='';
+if(CFG_OK){
+  sb=window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY,
+    {auth:{flowType:'pkce', detectSessionInUrl:true, persistSession:true, autoRefreshToken:true}});
+  backend=true;
+}
+const pubUrl = p => sb.storage.from('artwork').getPublicUrl(p).data.publicUrl;
+const fromRow = r => ({
+  id:r.id, t:r.title, cat:r.category, med:r.medium||'',
+  w:Number(r.width_in)||0, h:Number(r.height_in)||0, yr:r.year,
+  price:Number(r.price)||0, status:r.status, show:!!r.in_show, story:r.story||'',
+  motif:r.motif||CAT_MOTIF[r.category]||'mesa', sort:r.sort, published:!!r.published,
+  img:r.image_path?pubUrl(r.image_path):null, thumb:r.thumb_path?pubUrl(r.thumb_path):null,
+  image_path:r.image_path, thumb_path:r.thumb_path
+});
+const toRow = w => ({
+  title:w.t||'Untitled', category:w.cat, medium:w.med||'',
+  width_in:w.w||null, height_in:w.h||null, year:w.yr||null, price:w.price||0,
+  status:w.status, in_show:!!w.show, story:w.story||'', motif:w.motif||null,
+  sort:w.sort||0, published:!!w.published
+});
+const isPublic = w => w.published !== false;
+
+const dirty=new Map(); let flushT=null;
+function queueSave(w){
+  if(!backend){ saveDraft(); return; }
+  dirty.set(w.id,w); stamp('Saving…');
+  clearTimeout(flushT); flushT=setTimeout(flushSaves,600);
+}
+async function flushSaves(){
+  const items=[...dirty.values()]; dirty.clear();
+  for(const w of items){
+    const {error}=await sb.from('works').update(toRow(w)).eq('id',w.id);
+    if(error){ stamp('Save failed — '+error.message); return; }
+  }
+  stamp('Saved '+new Date().toLocaleTimeString());
+}
+let setT=null;
+function queueSettings(){
+  if(!backend){ saveDraft(); return; }
+  stamp('Saving…'); clearTimeout(setT);
+  setT=setTimeout(async()=>{
+    const {error}=await sb.from('gallery_settings').update({
+      title:C.meta.title, tagline:C.meta.tagline, email:C.meta.email,
+      default_format:C.meta.defaultFormat, show_name:C.show.name,
+      show_where:C.show.where, show_when:C.show.when, updated_at:new Date().toISOString()
+    }).eq('id',true);
+    stamp(error?('Save failed — '+error.message):('Saved '+new Date().toLocaleTimeString()));
+  },600);
+}
+async function persistOrder(){
+  C.works.forEach((w,i)=>w.sort=i);
+  if(!backend){ saveDraft(); return; }
+  stamp('Saving order…');
+  for(const w of C.works){
+    const {error}=await sb.from('works').update({sort:w.sort}).eq('id',w.id);
+    if(error){ stamp('Order failed — '+error.message); return; }
+  }
+  stamp('Order saved');
+}
+async function refreshAuth(){
+  if(!backend) return;
+  const {data}=await sb.auth.getSession(); session=data.session||null;
+  if(session){ const {data:ok}=await sb.rpc('is_admin'); isAdmin=!!ok; } else isAdmin=false;
+}
+async function loadBackend(){
+  const [s,r]=await Promise.all([
+    sb.from('gallery_settings').select('*').eq('id',true).maybeSingle(),
+    sb.from('works').select('*').order('sort',{ascending:true})
+  ]);
+  if(r.error) throw r.error;
+  const m=s.data||{};
+  return {
+    meta:{title:m.title||'Gallery', tagline:m.tagline||'', email:m.email||'',
+          defaultFormat:m.default_format||'salon', sample:false},
+    show:{name:m.show_name||'', where:m.show_where||'', when:m.show_when||''},
+    works:(r.data||[]).map(fromRow)
+  };
+}
 
 const DRAFT_KEY='wg.draft.v1';
 const loadDraft = ()=>{ try{ return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null'); }catch{ return null; } };
@@ -442,6 +533,7 @@ const MOTIF={
 const pcache={};
 function imgSrc(w,width){
   if(w.imgId && objUrl[w.imgId]) return objUrl[w.imgId];
+  if(w.thumb && width<=220) return w.thumb;
   if(w.img) return w.img;
   const k=w.id+'|'+w.cat+'|'+w.motif+'|'+w.w+'x'+w.h+'@'+width;
   if(!pcache[k]) pcache[k]=paint(w,width);
@@ -470,6 +562,7 @@ function capHTML(w,withPrice){
 }
 function visible(){
   return C.works.filter(w=>
+    (mode==='admin'||isPublic(w)) &&
     (state.cat==='all'||w.cat===state.cat) &&
     (state.avail==='all'||(state.avail==='show'?w.show:w.status===state.avail)));
 }
@@ -602,6 +695,7 @@ function mountViewer(){
   const banners=document.getElementById('banners');
   if(C.meta.sample) banners.innerHTML='<p class="note"><strong>Demo, not a real catalog.</strong> Every painting is machine-generated as a stand-in and the details are invented. Open <a href="#admin">the designer</a> to upload the real work.</p>';
   else if(usingDraft) banners.innerHTML='<p class="note draft"><b>Unpublished draft.</b> This is your local arrangement, visible only in this browser. Export it from <a href="#admin">the designer</a> and commit the files to publish.</p>';
+  else if(backend && !C.works.length) banners.innerHTML='<p class="note"><strong>Nothing published yet.</strong> Open <a href="#admin">the designer</a> to upload the first works.</p>';
   document.getElementById('availSel').value=state.avail;
   document.getElementById('availSel').onchange=e=>{ state.avail=e.target.value; state.hero=null; rerender(); };
   document.getElementById('themeBtn').onclick=toggleTheme;
@@ -628,11 +722,16 @@ function mountViewer(){
 
 /* ---------------- designer ---------------- */
 function mountAdmin(){
+  if(backend && !isAdmin){ mountGate(); return; }
+  const unpub=C.works.filter(w=>!isPublic(w)).length;
   document.getElementById('app').innerHTML=''+
   '<div class="adminbar"><div class="wrap">'+
     '<span class="label">Designer</span><strong>'+esc(C.meta.title)+'</strong>'+
-    '<span class="spacer"></span><span class="saved" id="savedAt">Draft saved in this browser</span>'+
-    '<button id="exportBtn" class="key">Export for the repo</button>'+
+    '<span class="spacer"></span>'+
+    '<span class="saved" id="savedAt">'+(backend?esc(session.user.email):'Draft saved in this browser')+'</span>'+
+    (unpub?'<button id="pubAll" class="key">Publish '+unpub+' hidden</button>':'')+
+    (backend?'<button id="outBtn">Sign out</button>'
+            :'<button id="exportBtn" class="key">Export for the repo</button>')+
     '<button id="viewBtn">View site</button>'+
   '</div></div>'+
   '<div class="designer">'+
@@ -652,12 +751,21 @@ function mountAdmin(){
     b.onclick=()=>{ state.tab=b.dataset.tab; mountAdmin(); };
   });
   document.getElementById('viewBtn').onclick=()=>{ location.hash=''; };
-  document.getElementById('exportBtn').onclick=openExport;
+  const exBtn=document.getElementById('exportBtn'); if(exBtn) exBtn.onclick=openExport;
+  const outBtn=document.getElementById('outBtn');
+  if(outBtn) outBtn.onclick=async()=>{ await sb.auth.signOut(); await refreshAuth(); C=await loadBackend(); rerender(); };
+  const pubBtn=document.getElementById('pubAll');
+  if(pubBtn) pubBtn.onclick=async()=>{
+    stamp('Publishing…');
+    for(const w of C.works){ if(!isPublic(w)){ w.published=true; if(backend) await sb.from('works').update({published:true}).eq('id',w.id); } }
+    if(!backend) saveDraft();
+    stamp('Published'); mountAdmin();
+  };
   const mf=document.getElementById('miniFmt');
   FORMATS.forEach(f=>{
     const b=document.createElement('button'); b.textContent=f.name;
     b.setAttribute('aria-pressed',state.fmt===f.key);
-    b.onclick=()=>{ state.fmt=f.key; C.meta.defaultFormat=f.key; saveDraft(); mountAdmin(); };
+    b.onclick=()=>{ state.fmt=f.key; C.meta.defaultFormat=f.key; queueSettings(); mountAdmin(); };
     mf.appendChild(b);
   });
   state.tab==='works' ? worksPane() : settingsPane();
@@ -687,7 +795,8 @@ function worksPane(){
     li.draggable=true; li.dataset.i=i;
     li.setAttribute('aria-selected', state.sel===w.id);
     li.innerHTML='<span class="hand">⣿</span>'+imgTag(w,120)+
-      '<span class="wt"><b>'+esc(w.t)+'</b><span>'+catName(w.cat)+' · '+dims(w)+'</span></span>';
+      '<span class="wt"><b>'+esc(w.t)+(isPublic(w)?'':'<em class="draftdot">hidden</em>')+'</b>'+
+      '<span>'+catName(w.cat)+' · '+dims(w)+'</span></span>';
     li.onclick=()=>{ state.sel=w.id; mountAdmin(); };
     li.addEventListener('dragstart',e=>{ li.classList.add('dragging'); e.dataTransfer.setData('text/plain',i); });
     li.addEventListener('dragend',()=>li.classList.remove('dragging'));
@@ -698,7 +807,7 @@ function worksPane(){
       const from=Number(e.dataTransfer.getData('text/plain')), to=i;
       if(from===to||isNaN(from)) return;
       C.works.splice(to,0,C.works.splice(from,1)[0]);
-      saveDraft(); mountAdmin();
+      persistOrder(); mountAdmin();
     });
     ul.appendChild(li);
   });
@@ -722,22 +831,33 @@ function worksPane(){
     '<div class="field"><label for="i-motif">Stand-in art</label><select id="i-motif"'+(w.imgId||w.img?' disabled':'')+'>'+
       MOTIFS.map(m=>'<option value="'+m+'"'+(w.motif===m?' selected':'')+'>'+m+'</option>').join('')+'</select></div></div>'+
     '<div class="field"><label for="i-story">Story shown in Show Preview</label><textarea id="i-story">'+esc(w.story||'')+'</textarea></div>'+
+    '<label class="check"><input type="checkbox" id="i-pub"'+(isPublic(w)?' checked':'')+'> Visible on the site</label>'+
     '<label class="check"><input type="checkbox" id="i-show"'+(w.show?' checked':'')+'> Travelling to the next show</label>'+
     '<div class="form-foot"><button class="ghost sm danger" id="i-del">Remove work</button>'+
     '<span class="spacer"></span><span class="hint">'+(w.imgId?'Your photograph':'Generated stand-in')+'</span></div>';
 
   const bind=(id,key,cast)=>{ const el=insp.querySelector(id); if(!el) return;
-    el.oninput=()=>{ w[key]=cast?cast(el.value):el.value; saveDraft(); softRefresh(); }; };
+    el.oninput=()=>{ w[key]=cast?cast(el.value):el.value; queueSave(w); softRefresh(); }; };
   bind('#i-t','t'); bind('#i-med','med'); bind('#i-story','story');
   bind('#i-w','w',Number); bind('#i-h','h',Number); bind('#i-yr','yr',Number); bind('#i-price','price',Number);
-  insp.querySelector('#i-cat').onchange=e=>{ w.cat=e.target.value; saveDraft(); mountAdmin(); };
-  insp.querySelector('#i-status').onchange=e=>{ w.status=e.target.value; saveDraft(); mountAdmin(); };
-  const mot=insp.querySelector('#i-motif'); if(mot) mot.onchange=e=>{ w.motif=e.target.value; saveDraft(); mountAdmin(); };
-  insp.querySelector('#i-show').onchange=e=>{ w.show=e.target.checked; saveDraft(); mountAdmin(); };
-  insp.querySelector('#i-del').onclick=()=>{
-    if(!confirm('Remove “'+w.t+'” from the gallery?')) return;
-    if(w.imgId){ idbDel(w.imgId); delete blobs[w.imgId]; }
-    C.works=C.works.filter(x=>x.id!==w.id); state.sel=null; saveDraft(); mountAdmin();
+  insp.querySelector('#i-cat').onchange=e=>{ w.cat=e.target.value; queueSave(w); mountAdmin(); };
+  insp.querySelector('#i-status').onchange=e=>{ w.status=e.target.value; queueSave(w); mountAdmin(); };
+  const mot=insp.querySelector('#i-motif'); if(mot) mot.onchange=e=>{ w.motif=e.target.value; queueSave(w); mountAdmin(); };
+  insp.querySelector('#i-show').onchange=e=>{ w.show=e.target.checked; queueSave(w); mountAdmin(); };
+  insp.querySelector('#i-pub').onchange=e=>{ w.published=e.target.checked; queueSave(w); mountAdmin(); };
+  insp.querySelector('#i-del').onclick=async()=>{
+    if(!confirm('Remove “'+w.t+'” from the gallery? This cannot be undone.')) return;
+    if(backend){
+      stamp('Removing…');
+      const paths=[w.image_path,w.thumb_path].filter(Boolean);
+      if(paths.length) await sb.storage.from('artwork').remove(paths);
+      const {error}=await sb.from('works').delete().eq('id',w.id);
+      if(error){ stamp('Remove failed — '+error.message); return; }
+      stamp('Removed');
+    } else if(w.imgId){ idbDel(w.imgId); delete blobs[w.imgId]; }
+    C.works=C.works.filter(x=>x.id!==w.id); state.sel=null;
+    if(!backend) saveDraft();
+    mountAdmin();
   };
 }
 function softRefresh(){
@@ -761,14 +881,14 @@ function settingsPane(){
     '<div class="field"><label for="s-name">Show name</label><input id="s-name" value="'+esc(C.show.name)+'"></div>'+
     '<div class="field"><label for="s-where">Booth / city</label><input id="s-where" value="'+esc(C.show.where)+'"></div>'+
     '<div class="field"><label for="s-when">Dates</label><input id="s-when" value="'+esc(C.show.when)+'"></div>'+
-    '<div class="form-foot" style="margin-top:6px"><button class="ghost sm danger" id="g-reset">Discard draft</button></div>'+
+    (backend?'':'<div class="form-foot" style="margin-top:6px"><button class="ghost sm danger" id="g-reset">Discard draft</button></div>')+
     '</div>';
   const b=(id,obj,key,after)=>{ const el=p.querySelector(id);
-    el.oninput=()=>{ obj[key]=el.value; C.meta.sample=false; saveDraft(); if(after) after(); }; };
+    el.oninput=()=>{ obj[key]=el.value; C.meta.sample=false; queueSettings(); if(after) after(); }; };
   b('#g-title',C.meta,'title'); b('#g-tag',C.meta,'tagline'); b('#g-email',C.meta,'email');
   b('#s-name',C.show,'name',softRefresh); b('#s-where',C.show,'where',softRefresh); b('#s-when',C.show,'when',softRefresh);
-  p.querySelector('#g-fmt').onchange=e=>{ C.meta.defaultFormat=e.target.value; state.fmt=e.target.value; saveDraft(); mountAdmin(); };
-  p.querySelector('#g-reset').onclick=async()=>{
+  p.querySelector('#g-fmt').onchange=e=>{ C.meta.defaultFormat=e.target.value; state.fmt=e.target.value; queueSettings(); mountAdmin(); };
+  const rst=p.querySelector('#g-reset'); if(rst) rst.onclick=async()=>{
     if(!confirm('Discard the local draft and go back to what is published? Uploaded images are deleted too.')) return;
     localStorage.removeItem(DRAFT_KEY);
     for(const id of Object.keys(blobs)) await idbDel(id);
@@ -786,26 +906,102 @@ function readSize(file){
     im.src=url;
   });
 }
+const titleFromFile = n => n.replace(/\.[a-z0-9]+$/i,'').replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+function inchesFor(pw,ph){
+  const long=24, ratio=(pw||4)/(ph||3);
+  return ratio>=1 ? {w:long, h:Math.max(1,Math.round(long/ratio))} : {w:Math.max(1,Math.round(long*ratio)), h:long};
+}
+async function shrink(file,max,q){
+  let bmp=null;
+  try{ bmp=await createImageBitmap(file); }
+  catch{
+    bmp=await new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=URL.createObjectURL(file); });
+  }
+  if(!bmp) return {blob:file, w:0, h:0};
+  const nw=bmp.width||bmp.naturalWidth, nh=bmp.height||bmp.naturalHeight;
+  const scale=Math.min(1, max/Math.max(nw,nh));
+  const cw=Math.max(1,Math.round(nw*scale)), ch=Math.max(1,Math.round(nh*scale));
+  const c=document.createElement('canvas'); c.width=cw; c.height=ch;
+  c.getContext('2d').drawImage(bmp,0,0,cw,ch);
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',q));
+  return {blob:blob||file, w:nw, h:nh};
+}
 async function addFiles(files){
   if(!files.length) return;
   if(C.meta.sample){ C.works=[]; C.meta.sample=false; }
+  backend ? await addFilesBackend(files) : await addFilesLocal(files);
+  state.sel=C.works[C.works.length-1].id;
+  mountAdmin();
+}
+async function addFilesBackend(files){
+  let i=0;
+  for(const f of files){
+    stamp('Uploading '+(++i)+' of '+files.length+'…');
+    const web=await shrink(f,2000,.86), thumb=await shrink(f,600,.8);
+    const id=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2));
+    const wp='works/'+id+'/web.jpg', tp='works/'+id+'/thumb.jpg';
+    const up1=await sb.storage.from('artwork').upload(wp,web.blob,{contentType:'image/jpeg',upsert:true});
+    if(up1.error){ stamp('Upload failed — '+up1.error.message); return; }
+    const up2=await sb.storage.from('artwork').upload(tp,thumb.blob,{contentType:'image/jpeg',upsert:true});
+    if(up2.error){ stamp('Upload failed — '+up2.error.message); return; }
+    const inches=inchesFor(web.w,web.h);
+    const row={id, title:titleFromFile(f.name), category:'landscapes', medium:'Oil on linen',
+      width_in:inches.w, height_in:inches.h, year:new Date().getFullYear(), price:0,
+      status:'available', in_show:false, story:'', image_path:wp, thumb_path:tp,
+      sort:C.works.length, published:false};
+    const {data,error}=await sb.from('works').insert(row).select().single();
+    if(error){ stamp('Could not save — '+error.message); return; }
+    C.works.push(fromRow(data));
+  }
+  stamp('Uploaded — set the details, then tick “Visible on the site”');
+}
+async function addFilesLocal(files){
   for(const f of files){
     const {w:pw,h:ph,url}=await readSize(f);
     const id='w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    const long=24, ratio=pw/ph;
-    const inches = ratio>=1 ? {w:long, h:Math.round(long/ratio)} : {w:Math.round(long*ratio), h:long};
-    const rec={id, name:f.name, type:f.type, blob:f};
-    await idbPut(rec); blobs[id]={name:f.name,blob:f}; objUrl[id]=url;
-    C.works.push({
-      id, imgId:id, file:f.name,
-      t:f.name.replace(/\.[a-z0-9]+$/i,'').replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),
+    const inches=inchesFor(pw,ph);
+    await idbPut({id, name:f.name, type:f.type, blob:f});
+    blobs[id]={name:f.name,blob:f}; objUrl[id]=url;
+    C.works.push({id, imgId:id, file:f.name, t:titleFromFile(f.name),
       cat:'landscapes', motif:'mesa', med:'Oil on linen',
       w:inches.w, h:inches.h, yr:new Date().getFullYear(),
-      price:0, status:'available', show:false, story:''
-    });
+      price:0, status:'available', show:false, story:''});
   }
-  state.sel=C.works[C.works.length-1].id;
-  saveDraft(); mountAdmin();
+  saveDraft();
+}
+
+/* ---------------- sign-in gate ---------------- */
+function mountGate(){
+  const inn=!!session;
+  document.getElementById('app').innerHTML=
+    '<div class="gate"><div class="label">Designer</div>'+
+    '<h2>'+(inn?'Not an editor':'Sign in to edit')+'</h2>'+
+    (inn
+      ? '<p class="hint">Signed in as '+esc(session.user.email)+', but that address is not on the editor list. '+
+        'Add it to the <code>admin_emails</code> table in Supabase, then sign in again.</p>'+
+        '<div class="form-foot"><button class="ghost" id="gOut">Sign out</button>'+
+        '<button class="ghost" id="gView">View site</button></div>'
+      : '<p class="hint">Enter your email and a one-time sign-in link arrives in your inbox. No password to keep track of.</p>'+
+        '<form id="gForm" style="display:flex;flex-direction:column;gap:12px">'+
+        '<div class="field"><label for="gEmail">Email</label><input id="gEmail" type="email" required autocomplete="email"></div>'+
+        '<div class="form-foot"><button class="solid" type="submit">Send sign-in link</button>'+
+        '<button class="ghost" type="button" id="gView">View site</button></div>'+
+        '<p class="hint" id="gNote">'+esc(authMsg)+'</p></form>')+
+    '</div>';
+  const gv=document.getElementById('gView'); if(gv) gv.onclick=()=>{ location.hash=''; };
+  const go=document.getElementById('gOut');
+  if(go) go.onclick=async()=>{ await sb.auth.signOut(); await refreshAuth(); rerender(); };
+  const gf=document.getElementById('gForm');
+  if(gf) gf.onsubmit=async e=>{
+    e.preventDefault();
+    const note=document.getElementById('gNote'), email=document.getElementById('gEmail').value.trim();
+    note.textContent='Sending…';
+    try{ localStorage.setItem('wg.returnAdmin','1'); }catch{}
+    const {error}=await sb.auth.signInWithOtp({email,
+      options:{emailRedirectTo:location.origin+location.pathname+'#admin'}});
+    note.textContent = error ? ('Could not send it — '+error.message)
+      : 'Link sent to '+email+'. Open it on this device and you will land back here.';
+  };
 }
 
 /* ---------------- export (zip, stored) ---------------- */
@@ -951,21 +1147,51 @@ function toggleTheme(){
 function rerender(){ mode==='admin'?mountAdmin():mountViewer(); }
 addEventListener('hashchange',()=>{ mode=location.hash.replace('#','')==='admin'?'admin':'viewer'; state.sel=null; rerender(); });
 
-async function boot(){
-  try{
-    const r=await fetch('collection.json',{cache:'no-store'});
-    if(r.ok) published=await r.json();
-  }catch{}
-  const draft=loadDraft();
-  if(draft&&draft.works){ C=draft; usingDraft=true; }
-  else C=published||JSON.parse(JSON.stringify(SAMPLE));
+function normalize(first){
   C.meta=Object.assign({defaultFormat:'salon',email:'studio@example.com',title:'Gallery',tagline:''},C.meta);
   C.show=Object.assign({name:'',where:'',when:''},C.show);
-  state.fmt=C.meta.defaultFormat||'salon';
+  if(first) state.fmt=C.meta.defaultFormat||'salon';
+}
+let booted=false;
+async function boot(){
+  if(backend){
+    try{
+      await refreshAuth();
+      C=await loadBackend();
+      sb.auth.onAuthStateChange(async ev=>{
+        if(!booted || !['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(ev)) return;
+        await refreshAuth();
+        try{ C=await loadBackend(); normalize(false); }catch{}
+        rerender();
+      });
+    }catch(e){
+      backend=false; C=null;
+      authMsg='Could not reach the database — showing the local copy.';
+      console.warn('Supabase unavailable:',e);
+    }
+  }
+  if(!C){
+    try{
+      const r=await fetch('collection.json',{cache:'no-store'});
+      if(r.ok) published=await r.json();
+    }catch{}
+    const draft=loadDraft();
+    if(draft&&draft.works){ C=draft; usingDraft=true; }
+    else C=published||JSON.parse(JSON.stringify(SAMPLE));
+    try{
+      const recs=await idbAll();
+      (recs||[]).forEach(r=>{ blobs[r.id]={name:r.name,blob:r.blob}; objUrl[r.id]=URL.createObjectURL(r.blob); });
+    }catch{}
+  }
+  normalize(true);
+  // a magic link lands on the plain URL if the fragment was dropped in transit
   try{
-    const recs=await idbAll();
-    (recs||[]).forEach(r=>{ blobs[r.id]={name:r.name,blob:r.blob}; objUrl[r.id]=URL.createObjectURL(r.blob); });
+    if(localStorage.getItem('wg.returnAdmin')){
+      localStorage.removeItem('wg.returnAdmin');
+      if(session && location.hash!=='#admin'){ location.hash='#admin'; mode='admin'; }
+    }
   }catch{}
+  booted=true;
   rerender();
 }
 boot();
